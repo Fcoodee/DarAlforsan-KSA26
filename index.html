@@ -252,15 +252,6 @@ main > section::before { content: ""; position: absolute; inset: 0; z-index: -1;
   background: var(--emblem-line); opacity: var(--emblem-op);
   -webkit-mask: url("img/emblem-outline.png") center / auto min(320px, 80%) no-repeat;
           mask: url("img/emblem-outline.png") center / auto min(320px, 80%) no-repeat; }
-.kolna { margin-top: 28px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
-.kolna h2 { margin-top: 0; color: var(--accent); }
-.kolna-body { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
-.kolna-img { width: 140px; height: auto; border-radius: 10px; border: 1px solid var(--line); flex: none; }
-.kolna-text { flex: 1; min-width: 240px; line-height: 1.9; }
-.kolna-sub { margin: 8px 0 0; font-weight: 700; }
-.kolna-list { margin: 6px 0; padding-inline-start: 1.2em; }
-.kolna-kids { margin: 8px 0; padding: 10px 12px; border-inline-start: 4px solid var(--accent); background: var(--accent-soft); border-radius: 6px; }
-.kolna a { color: var(--accent); font-weight: 600; }
 .gal-title { margin: 0 0 10px; text-align: center; font-family: var(--font-display); color: var(--accent); text-shadow: 0 0 8px var(--neon-glow); }
 .motion-note { margin: 8px 0 0; font-size: .85rem; color: var(--muted); line-height: 1.8; }
 .c-pause[aria-pressed="true"] { background: var(--neon); border-color: var(--neon); color: #04230F; font-weight: 700; }
@@ -454,7 +445,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
         <div class="slide"><img class="bg" src="img/n9.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n9.jpg" alt="ملصق «آمن»: فحص الملفات خطوة استباقية تعزز الأمان" loading="lazy"></div>
         <div class="slide"><img class="bg" src="img/n10.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n10.jpg" alt="ملصق «آمن»: الرقابة الأبوية حماية للأطفال" loading="lazy"></div>
         <div class="slide"><img class="bg" src="img/n11.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n11.jpg" alt="ملصق «آمن»: أجهزة ذكية في المنزل تتطلب حماية مستمرة" loading="lazy"></div>
-        <div class="slide"><img class="bg" src="img/n12.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n12.jpg" alt="ملصق «درع الوطن أهله»: تطبيق «كلنا أمن» من الأمن العام يمكّن من رفع البلاغات الأمنية والإنسانية" loading="lazy"></div>
         <button class="c-btn c-prev" id="c-prev" type="button" aria-label="الصورة السابقة">›</button>
         <button class="c-btn c-next" id="c-next" type="button" aria-label="الصورة التالية">‹</button>
         <div class="c-bar">
@@ -464,26 +454,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
         </div>
       </div>
       <p class="motion-note" id="motion-note" hidden>الحركة متوقفة لأن جهازك مضبوط على تقليل الحركة (إزالة الرسوم المتحركة أو توفير الطاقة). يمكنك تشغيل المعرض بزر «تشغيل»، أو التصفح بالأسهم.</p>
-    </section>
-
-    <section id="kolna" class="kolna" aria-labelledby="kolna-h">
-      <h2 id="kolna-h">#كلنا_أمن</h2>
-      <div class="kolna-body">
-        <img class="kolna-img" src="img/n12.jpg" alt="ملصق «درع الوطن أهله» عن تطبيق «كلنا أمن»" loading="lazy">
-        <div class="kolna-text">
-          <p><b>درع الوطن أهله.</b> هذا هو الملصق الأخير في معرض #وطن_آمن أعلاه. يعرّف بتطبيق «كلنا أمن» التابع للأمن العام في وزارة الداخلية، وهو قناة رسمية لرفع البلاغات الأمنية والإنسانية بالصورة أو المقطع أو الصوت ومتابعة حالتها.</p>
-          <p class="kolna-sub">ما الذي يشمله بحسب الملصق؟</p>
-          <ul class="kolna-list">
-            <li>الاتجار بالأشخاص</li>
-            <li>الجرائم المعلوماتية</li>
-            <li>الاعتداء</li>
-            <li>البلاغات المرورية</li>
-            <li>بلاغات حماية البيئة</li>
-          </ul>
-          <p class="kolna-kids"><b>للطالب:</b> التطبيق للكبار. إن رأيت ما يثير الشك أو الخوف فأخبر وليّ أمرك أو معلمك فورًا، وهم يرفعون البلاغ. لا تُرسل بلاغًا للتجربة أو المزاح.</p>
-          <p class="fineprint">متاح على Google Play وApp Store، ويدعم تسجيل الدخول عبر «نفاذ». المصدر: <a href="https://apps.apple.com/us/app/%D9%83%D9%84%D9%86%D8%A7-%D8%A3%D9%85%D9%86/id1085635249" target="_blank" rel="noopener">صفحة التطبيق في App Store</a> (آخر تحقق ٢٦ أكتوبر ٢٠٢٦). هذه الصفحة مدرسية وليست رسمية.</p>
-        </div>
-      </div>
     </section>
 
     <section id="m2">
