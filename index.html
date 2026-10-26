@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B3D28">
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>السعودية خط أحمر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@600;700;800&family=Tajawal:wght@400;500;700&display=swap">
+<style>
+/* Layout: a single scrolling page. A deep-green hero carrying the verse and a stretched wordmark split by one red line,
+   then a progress strip, then three missions (article, rumor shield, weekly pledge), then responsible-use notes. */
+:root {
+  --bg: #F2F5F1;
+  --surface: #FFFFFF;
+  --fg: #10231A;
+  --muted: #485D51;
+  --accent: #0B5D3B;
+  --accent-soft: #DCEBE1;
+  --red: #C8102E;
+  --line: #C9D6CD;
+  --hero-bg: #0B3D28;
+  --hero-fg: #F2F7F3;
+  --band-bg: #FFFFFF; /* logos sit on white in both themes */
+  --good: #0B6B3F;
+  --good-soft: #DDF0E4;
+  --bad: #A4162D;
+  --bad-soft: #F8E1E4;
+  --font-display: 'Cairo', system-ui, -apple-system, 'Segoe UI', 'Noto Sans Arabic', 'Geeza Pro', Tahoma, sans-serif;
+  --font-body: 'Tajawal', system-ui, -apple-system, 'Segoe UI', 'Noto Sans Arabic', 'Geeza Pro', Tahoma, sans-serif;
+  --font-verse: 'Amiri Quran', 'Amiri', 'Scheherazade New', 'Geeza Pro', 'Traditional Arabic', serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #08170F; --surface: #0F2418; --fg: #E7F0EA; --muted: #9DB3A5;
+    --accent: #5CC28A; --accent-soft: #143323; --red: #FF4D5E; --line: #23402F;
+    --hero-bg: #0A2819; --hero-fg: #F2F7F3;
+    --good: #67D399; --good-soft: #12392410; --bad: #FF8593; --bad-soft: #3A1620;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #08170F; --surface: #0F2418; --fg: #E7F0EA; --muted: #9DB3A5;
+  --accent: #5CC28A; --accent-soft: #143323; --red: #FF4D5E; --line: #23402F;
+  --hero-bg: #0A2819; --hero-fg: #F2F7F3;
+  --good: #67D399; --good-soft: #123924; --bad: #FF8593; --bad-soft: #3A1620;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --good-soft: #123924; }
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 18px; line-height: 1.85;
+  direction: rtl; text-align: right; overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.wrap {
+  max-width: 880px; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3, p { margin: 0; }
+h2, h3 { text-wrap: balance; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+button { font: inherit; color: inherit; -webkit-appearance: none; appearance: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+/* Hero */
+.hero { background: var(--hero-bg); color: var(--hero-fg); padding-block: 40px 44px; }
+.brand-band { background: var(--band-bg); border-bottom: 4px solid var(--red); padding-block: 14px; }
+.brand-band img { display: block; margin-inline: auto; height: clamp(64px, 14vw, 96px); width: auto; max-width: 100%; }
+.hero .wrap { text-align: center; }
+.title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 5.8vw, 2.7rem); line-height: 1.6; text-wrap: balance; }
+.years { margin-top: 10px; font-weight: 600; font-size: 1.05rem; font-variant-numeric: tabular-nums; color: rgba(242,247,243,.88); color: color-mix(in srgb, var(--hero-fg) 88%, transparent); }
+.years .sep { opacity: .55; padding-inline: .7em; }
+.hero-rule { height: 1px; background: rgba(242,247,243,.3); background: color-mix(in srgb, var(--hero-fg) 30%, transparent); margin-block: 26px 22px; }
+.verse { font-family: var(--font-verse); font-size: clamp(1.4rem, 4.4vw, 2rem); line-height: 1.9; font-weight: 400; text-align: center; }
+.wordmark { margin-top: 20px; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 7vw, 3.2rem); line-height: 1.2; overflow: hidden; }
+.wordmark .a { display: block; text-align: right; }
+.wordmark .b { display: block; text-align: left; }
+.redline { height: 6px; background: var(--red); margin-block: 4px; }
+.lede { margin-top: 22px; margin-inline: auto; max-width: 34em; font-size: 1.1rem; color: rgba(242,247,243,.86); color: color-mix(in srgb, var(--hero-fg) 86%, transparent); }
+.proto-tag { display: inline-block; margin-top: 18px; padding: 2px 12px; border: 1px solid rgba(242,247,243,.45); border: 1px solid color-mix(in srgb, var(--hero-fg) 45%, transparent); border-radius: 999px; font-size: .85rem; }
+
+/* Progress */
+.progress { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; padding-block: 22px 6px; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; min-width: 0; }
+.step small { display: block; color: var(--muted); font-size: .8rem; letter-spacing: .02em; }
+.step b { display: block; font-weight: 600; font-size: .95rem; line-height: 1.5; }
+.step[data-done="true"] { border-color: var(--good); background: var(--good-soft); }
+.step[data-done="true"] small::after { content: " · تمّت"; color: var(--good); font-weight: 600; }
+
+/* Sections */
+section { padding-block: 34px 6px; }
+.mission-label { font-size: .85rem; color: var(--red); font-weight: 600; letter-spacing: .03em; }
+section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 4.6vw, 2.1rem); line-height: 1.4; margin-top: 2px; }
+.intro { color: var(--muted); margin-top: 6px; max-width: 40em; }
+
+.article { margin-top: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px 20px 18px; }
+.article .tag { font-size: .85rem; color: var(--muted); }
+.article .text { font-family: var(--font-verse); font-size: clamp(1.35rem, 4vw, 1.8rem); line-height: 2; margin-top: 4px; }
+.verbs { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 14px; }
+.verb { border-top: 2px solid var(--accent); padding-top: 8px; min-width: 0; }
+.verb b { display: block; font-family: var(--font-display); font-size: 1.15rem; color: var(--accent); }
+.verb span { font-size: .95rem; color: var(--muted); line-height: 1.7; display: block; }
+
+.q { margin-top: 20px; }
+.q .prompt { font-weight: 600; }
+
+.choices { display: grid; gap: 8px; margin-top: 10px; }
+.choice {
+  text-align: right; background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+  padding: 10px 14px; cursor: pointer; line-height: 1.7; min-width: 0;
+}
+@media (hover: hover) { .choice:hover:not(:disabled) { border-color: var(--accent); } }
+.choice:disabled { cursor: default; }
+.choice.is-good { border-color: var(--good); background: var(--good-soft); }
+.choice.is-bad { border-color: var(--bad); background: var(--bad-soft); }
+.choice.is-dim { opacity: .6; }
+.feedback { margin-top: 10px; padding: 10px 14px; border-radius: 6px; background: var(--accent-soft); font-size: .98rem; }
+.feedback b { font-weight: 600; }
+
+.scenario { margin-top: 22px; }
+.scenario .num { font-size: .85rem; color: var(--muted); }
+.msg {
+  margin-top: 4px; background: var(--surface); border: 1px dashed var(--line); border-radius: 6px;
+  padding: 12px 14px;
+}
+.msg .src { display: block; font-size: .82rem; color: var(--muted); margin-bottom: 2px; }
+.msg q { quotes: none; font-weight: 500; }
+.result { margin-top: 24px; padding: 14px 16px; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent-soft); }
+.result b { font-family: var(--font-display); font-size: 1.15rem; }
+.link-btn { background: none; border: none; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 10px 0; font-size: .95rem; margin-top: 2px; }
+
+/* Pledge */
+.acts { display: grid; gap: 8px; margin-top: 12px; }
+
+/* Verification mission */
+.callout { margin-top: 16px; padding: 14px 16px; border: 1px solid var(--accent); background: var(--accent-soft); border-radius: 6px; font-weight: 500; }
+.callout a { color: var(--accent); font-weight: 600; }
+.svc-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.svc-head .chip { background: var(--band-bg); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; display: inline-flex; }
+.svc-head .chip img { height: 52px; width: auto; max-width: 100%; display: block; }
+.svc-head p { flex: 1; min-width: 220px; font-size: .95rem; color: var(--muted); }
+.svcs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 12px; }
+.svc { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.svc h3 { font-family: var(--font-display); font-size: 1.1rem; line-height: 1.5; }
+.svc .badge { align-self: flex-start; font-size: .78rem; padding: 0 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
+.svc p { font-size: .95rem; color: var(--muted); line-height: 1.7; }
+.svc .who { font-size: .9rem; }
+.svc .who b { color: var(--fg); font-weight: 600; }
+.svc a.go { margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; color: var(--accent); font-weight: 600; text-decoration: underline; }
+.fineprint { margin-top: 10px; font-size: .85rem; color: var(--muted); }
+.sub { margin-top: 30px; font-family: var(--font-display); font-size: 1.3rem; line-height: 1.5; }
+.code { display: block; direction: ltr; text-align: left; unicode-bidi: plaintext; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .95rem; margin-top: 6px; word-break: break-all; color: var(--fg); }
+
+/* Carousel */
+.carousel {
+  position: relative; margin-top: 14px; border-radius: 6px; overflow: hidden;
+  background: var(--hero-bg); height: clamp(340px, 68vh, 600px); height: clamp(340px, 68dvh, 600px); touch-action: pan-y;
+}
+.slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .7s ease, visibility 0s linear .7s; }
+.slide.is-active { opacity: 1; visibility: visible; transition: opacity .7s ease; }
+.slide img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; }
+.slide .bg { object-fit: cover; filter: blur(28px) brightness(.55); transform: scale(1.15); }
+.slide .fg { object-fit: contain; }
+.c-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+  width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+  border: 1px solid rgba(255,255,255,.55); background: rgba(6,20,12,.55); color: #fff;
+  font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 0 4px;
+}
+@media (hover: hover) { .c-btn:hover { background: rgba(6,20,12,.8); } }
+.c-prev { right: 10px; }
+.c-next { left: 10px; }
+.c-bar {
+  position: absolute; inset-inline: 0; bottom: 0; z-index: 3; display: flex; align-items: center; gap: 12px;
+  padding: 26px 14px 12px; background: linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,0)); color: #fff;
+}
+.c-dots { display: flex; gap: 8px; flex: 1; min-width: 0; flex-wrap: wrap; }
+.c-dot { position: relative; width: 10px; height: 10px; border-radius: 50%; border: 1px solid #fff; background: transparent; padding: 0; cursor: pointer; }
+.c-dot::after { content: ""; position: absolute; inset: -14px -4px; }
+.c-dot[aria-current="true"] { background: #fff; width: 26px; border-radius: 6px; }
+.c-pause { background: none; border: 1px solid rgba(255,255,255,.6); color: #fff; border-radius: 999px; padding: 0 16px; min-height: 40px; font-size: .85rem; cursor: pointer; line-height: 1.9; }
+.c-count { font-size: .85rem; font-variant-numeric: tabular-nums; }
+.carousel :focus-visible { outline-color: #fff; }
+
+/* Notes */
+main { padding-bottom: 48px; }
+
+/* Reset bar for the next student */
+.topbar { background: var(--hero-bg); color: var(--hero-fg); padding-block: 8px; }
+.topbar .wrap { display: flex; }
+#reset-zone { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.reset-ask { font-size: .9rem; opacity: .9; }
+.reset-btn {
+  background: transparent; color: var(--hero-fg); border: 1px solid rgba(242,247,243,.6); border: 1px solid color-mix(in srgb, var(--hero-fg) 60%, transparent);
+  border-radius: 999px; padding: 4px 18px; min-height: 40px; font-size: .92rem; line-height: 1.8; cursor: pointer;
+}
+@media (hover: hover) { .reset-btn:hover { border-color: var(--hero-fg); } }
+.reset-yes { background: var(--hero-fg); color: var(--hero-bg); border-color: var(--hero-fg); font-weight: 700; }
+.topbar :focus-visible { outline-color: var(--hero-fg); }
+
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .progress { grid-template-columns: 1fr; }
+}
+
+/* Device adaptation. Phones are the base layout (about 320 to 699px, portrait and landscape). */
+@media (max-width: 360px) {
+  body { font-size: 16px; }
+  .title { font-size: 1.6rem; }
+  .choice { padding: 10px 12px; }
+  .c-btn { width: 40px; height: 40px; }
+  .reset-ask { flex-basis: 100%; }
+}
+/* Tablets: iPad and Android tablets, portrait and landscape */
+@media (min-width: 700px) {
+  body { font-size: 19px; }
+  .wrap { max-width: 960px; }
+  .progress { grid-template-columns: repeat(4, 1fr); }
+  .verbs { grid-template-columns: repeat(4, 1fr); }
+  .svcs { grid-template-columns: repeat(3, 1fr); }
+  .carousel { height: clamp(420px, 62vh, 640px); height: clamp(420px, 62dvh, 640px); }
+}
+/* Laptops and desktop monitors on Windows and macOS */
+@media (min-width: 1100px) {
+  .wrap { max-width: 1040px; }
+  .carousel { max-width: 820px; margin-inline: auto; }
+}
+@media (min-width: 1600px) {
+  body { font-size: 20px; }
+  .wrap { max-width: 1180px; }
+}
+/* Landscape phones and short windows */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero { padding-block: 22px 26px; }
+  .brand-band img { height: 56px; }
+  .carousel { height: 80vh; height: 80dvh; min-height: 240px; }
+}
+/* Windows high contrast and similar forced-colors modes */
+@media (forced-colors: active) {
+  .choice, .step, .svc, .msg, .article, .result, .callout, .svc-head, .reset-btn, .c-btn, .c-pause { border: 1px solid CanvasText; }
+  .choice.is-good, .step[data-done="true"] { border-width: 3px; }
+  .choice.is-bad { border-style: dashed; border-width: 3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slide, .slide.is-active { transition: none; }
+}
+</style>
+
+</head>
+<body>
+<div dir="rtl" lang="ar">
+  <div class="topbar">
+    <div class="wrap"><div id="reset-zone"></div></div>
+  </div>
+  <div class="brand-band">
+    <div class="wrap"><img src="img/daf.png" alt="شعار مدارس دار الفرسان: نفكر، نتأمل، نتعلم"></div>
+  </div>
+  <header class="hero">
+    <div class="wrap">
+      <h1 class="title">مبادرة تعزيز الوعي الوطني لدى طلاب مدارس دار الفرسان الأهلية</h1>
+      <p class="years"><span dir="ltr">1448 - 1449</span> هـ <span class="sep">|</span> <span dir="ltr">2026 - 2027</span> م</p>
+      <div class="hero-rule" aria-hidden="true"></div>
+      <p class="verse">﴿رَبِّ اجْعَلْ هَٰذَا الْبَلَدَ آمِنًا﴾</p>
+      <div class="wordmark" aria-label="السعودية خط أحمر">
+        <span class="a" aria-hidden="true">السعــــــــ</span>
+        <div class="redline" aria-hidden="true"></div>
+        <span class="b" aria-hidden="true">ـــــــودية</span>
+      </div>
+      <p class="lede">حماية الوطن واجبٌ يمارسه كل مواطن، والطالب يبدأ بما يقدر عليه اليوم: أن يعرف، ويتحقق، ويُسهم.</p>
+      <span class="proto-tag">نموذج أولي للعرض والنقاش</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="progress" id="progress" aria-label="تقدمك في المهام">
+      <div class="step" data-step="1" data-done="false"><small>المهمة ١ من ٤</small><b>أفهم الواجب</b></div>
+      <div class="step" data-step="2" data-done="false"><small>المهمة ٢ من ٤</small><b>أصدّ الشائعة</b></div>
+      <div class="step" data-step="3" data-done="false"><small>المهمة ٣ من ٤</small><b>أتحقق قبل أن أفتح</b></div>
+      <div class="step" data-step="4" data-done="false"><small>المهمة ٤ من ٤</small><b>ألتزم بفعل</b></div>
+    </div>
+
+    <section id="m1">
+      <p class="mission-label">المهمة ١ من ٤</p>
+      <h2>أفهم الواجب</h2>
+      <p class="intro">النظام الأساسي للحكم يجعل الدفاع مسؤولية مشتركة. اقرأ المادة ثم أجب عن سؤال واحد.</p>
+
+      <div class="article">
+        <span class="tag">المادة الرابعة والثلاثون · النظام الأساسي للحكم</span>
+        <p class="text">الدفاع عن العقيدة الإسلامية، والمجتمع، والوطن واجب على كل مواطن.</p>
+        <div class="verbs">
+          <div class="verb"><b>أعرف</b><span>أفهم ما يهدد أمن مجتمعي وكيف ينتشر.</span></div>
+          <div class="verb"><b>أتحقق</b><span>لا أنقل خبرًا قبل التأكد من مصدره الرسمي.</span></div>
+          <div class="verb"><b>أُبلّغ</b><span>أُخبر الجهة المختصة أو معلمي بما يثير الشك.</span></div>
+          <div class="verb"><b>أُسهم</b><span>أعمل بما ينفع مدرستي وحيّي ووطني.</span></div>
+        </div>
+      </div>
+
+      <div class="q" id="q1">
+        <p class="prompt">على من يقع واجب الدفاع عن العقيدة والمجتمع والوطن؟</p>
+        <div class="choices" id="q1-choices"></div>
+        <div id="q1-feedback"></div>
+      </div>
+    </section>
+
+    <section id="gallery" aria-label="معرض الصور">
+      <div class="carousel" id="carousel" role="region" aria-roledescription="carousel" aria-label="معرض صور" tabindex="0">
+        <div class="slide is-active"><img class="bg" src="img/s6.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s6.jpg" alt="تصميم أخضر بارز لخريطة المملكة وعبارة «ربّ اجعل هذا البلد آمنًا»"></div>
+        <div class="slide"><img class="bg" src="img/s2.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s2.jpg" alt="دعاء بحفظ البلاد مكتوب بخط عربي أخضر تحت شعار النخلة والسيفين"></div>
+        <div class="slide"><img class="bg" src="img/s4.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s4.jpg" alt="تصميم لكلمة «السعودية» يقطعها خط أحمر"></div>
+        <div class="slide"><img class="bg" src="img/s3.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s3.jpg" alt="مشاهد متتابعة: شارة على الزي العسكري، وتحية للعلم، وخريطة المملكة، وطائرات مروحية عند الغروب"></div>
+        <div class="slide"><img class="bg" src="img/s5.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s5.jpg" alt="صورة بالأبيض والأسود لشخصين بالزي الرسمي مع عبارة «يا وطنًا فيك خير وفيك خيرة»"></div>
+        <div class="slide"><img class="bg" src="img/s1.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s1.jpg" alt="جنود في ساحة تصطف فيها آليات عند الغروب"></div>
+        <button class="c-btn c-prev" id="c-prev" type="button" aria-label="الصورة السابقة">›</button>
+        <button class="c-btn c-next" id="c-next" type="button" aria-label="الصورة التالية">‹</button>
+        <div class="c-bar">
+          <div class="c-dots" id="c-dots"></div>
+          <span class="c-count" id="c-count"></span>
+          <button class="c-pause" id="c-pause" type="button">إيقاف</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="m2">
+      <p class="mission-label">المهمة ٢ من ٤</p>
+      <h2>أصدّ الشائعة</h2>
+      <p class="intro">خمسة مواقف يمرّ بها الطلبة كل أسبوع. اختر التصرف الأنسب في كل موقف.</p>
+      <div id="shield"></div>
+      <div id="shield-result"></div>
+    </section>
+
+    <section id="m3">
+      <p class="mission-label">المهمة ٣ من ٤</p>
+      <h2>أتحقق قبل أن أفتح</h2>
+      <div class="callout">قبل التعامل مع الروابط ورموز الاستجابة السريعة (QR) والملفات، تأكد من موثوقيتها عبر خدمة «تحقق»، و<a href="https://x.com/hashtag/%D9%84%D8%A7_%D8%AA%D9%81%D8%AA%D8%AD_%D9%85%D8%AC%D8%A7%D9%84?src=hashtag_click" target="_blank" rel="noopener">#لا_تفتح_مجال</a> للمتصيدين.</div>
+
+      <div class="svc-head">
+        <span class="chip"><img src="img/nca.png" alt="شعار الهيئة الوطنية للأمن السيبراني"></span>
+        <p>الخدمات التالية تقدمها الهيئة الوطنية للأمن السيبراني. هذه المبادرة تتبع مدارس دار الفرسان ولا تمثّل الهيئة.</p>
+      </div>
+      <div class="svcs">
+        <article class="svc">
+          <h3>تحقق</h3>
+          <p>فحص موثوقية الروابط ورموز الاستجابة السريعة (QR) والملفات، عبر قناة واتساب وبوابة حصين.</p>
+          <p class="who"><b>من ينفّذ:</b> الطالب مع شخص بالغ</p>
+          <a class="go" href="https://nca.gov.sa/ar/tahqaq/" target="_blank" rel="noopener">الانتقال إلى الخدمة</a>
+        </article>
+        <article class="svc">
+          <span class="badge">إطلاق تجريبي</span>
+          <h3>تحقق للملفات</h3>
+          <p>فحص الملفات للتحقق من خلوها من البرمجيات الضارة وتقدير احتمال وجود تهديد عند فتحها.</p>
+          <p class="who"><b>من ينفّذ:</b> شخص بالغ فقط</p>
+          <a class="go" href="https://nca.gov.sa/ar/services/tahqaq-for-files/" target="_blank" rel="noopener">الانتقال إلى الخدمة</a>
+        </article>
+        <article class="svc">
+          <span class="badge">إطلاق تجريبي</span>
+          <h3>الإبلاغ عن مخالفة أمن سيبراني</h3>
+          <p>خدمة لتلقي البلاغات، وتذكر صفحتها أن معالجة البلاغ تستغرق ٣ أيام عمل.</p>
+          <p class="who"><b>من ينفّذ:</b> وليّ الأمر أو المدرسة</p>
+          <a class="go" href="https://nca.gov.sa/ar/services/report-a-cybersecurity-violation/" target="_blank" rel="noopener">الانتقال إلى الخدمة</a>
+        </article>
+      </div>
+      <p class="fineprint">آخر تحقق من هذه الصفحات: ٢٦ أكتوبر ٢٠٢٦. الخدمات التجريبية قد تتغير، فارجع إلى الصفحة الرسمية. لا ترسل رابطاً يحمل بياناتك إلى أي خدمة.</p>
+
+      <h3 class="sub">تدريب: ما الذي يثير الشك؟</h3>
+      <p class="intro">محاكاة تعليمية داخل الصفحة. لا ترسل شيئاً ولا تستخدم الخدمة الفعلية، والأمثلة مصطنعة.</p>
+      <div id="sim"></div>
+      <div id="sim-result"></div>
+    </section>
+
+    <section id="m4">
+      <p class="mission-label">المهمة ٤ من ٤</p>
+      <h2>ألتزم بفعل</h2>
+      <p class="intro">الانتماء يظهر في السلوك. اختر فعلًا واحدًا تلتزم به.</p>
+      <div class="acts" id="acts" role="radiogroup" aria-label="الفعل الذي ألتزم به"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  document.documentElement.setAttribute('dir', 'rtl');
+  document.documentElement.setAttribute('lang', 'ar');
+
+  var AR = function (n) { return String(n).replace(/\d/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'[d]; }); };
+
+  var Q1 = {
+    options: ['القوات المسلحة وحدها', 'كل مواطن', 'الكبار فقط'],
+    correct: 1,
+    good: 'صحيح. الواجب يشمل كل مواطن، وتختلف صورة أدائه بحسب الاختصاص والأنظمة. للطالب دور حقيقي وإن اختلف عن دور غيره.',
+    bad: 'ليس تمامًا. نص المادة يجعل الواجب على كل مواطن، وليس على فئة واحدة. الذي يختلف هو صورة أدائه.'
+  };
+
+  var SC = [
+    {
+      src: 'رسالة مُحوَّلة · بلا مصدر',
+      msg: 'عاجل: تعليق الدراسة غدًا في جميع المناطق. أرسلها لكل من تعرف قبل أن تُحذف!',
+      opts: [
+        'أحوّلها فورًا، فقد تفيد غيري',
+        'أتأكد من القنوات الرسمية لوزارة التعليم أو مدرستي قبل أي إرسال',
+        'أنتظر دقيقة وأحوّلها إن لم تُحذف'
+      ],
+      correct: 1,
+      good: 'الاستعجال وطلب التحويل علامتان شائعتان للشائعة. القناة الرسمية هي المرجع.',
+      bad: 'الأنسب هو التحقق من القناة الرسمية أولًا. التحويل السريع هو ما تعيش عليه الشائعة.'
+    },
+    {
+      src: 'مقطع صوتي · متداول في مجموعة',
+      msg: 'صوتٌ يشبه شخصية عامة معروفة يطلب تبرعات على رقم حساب مرفق.',
+      opts: [
+        'أصدّقه لأن الصوت مطابق',
+        'لا أحوّله، وأتحقق من الحسابات الرسمية للجهة، وأخبر معلمي أو وليّ أمري',
+        'أحوّله مع عبارة «لا أعرف مدى صحته»'
+      ],
+      correct: 1,
+      good: 'الأصوات والوجوه يمكن تقليدها بالذكاء الاصطناعي. التشابه ليس دليلًا، والتحويل مع التحفّظ ينشر المقطع أيضًا.',
+      bad: 'الأنسب هو عدم التحويل والتحقق من المصدر الرسمي. يمكن تقليد الصوت بالذكاء الاصطناعي، والتحفّظ في العبارة لا يوقف الانتشار.'
+    },
+    {
+      src: 'صورة · تُنسب إلى «اليوم»',
+      msg: 'صورة لحادث مؤثر، والنص المرافق يقول إنه وقع اليوم في مدينتنا.',
+      opts: [
+        'أنشرها لأنها مؤثرة وتستحق الانتباه',
+        'أبحث عن الصورة بالبحث العكسي، وأتأكد من تاريخها ومصدرها قبل أي تعليق',
+        'أنشرها مع دعاء بالسلامة'
+      ],
+      correct: 1,
+      good: 'كثيرًا ما تُعاد نسبة صور قديمة إلى أحداث جديدة. التأثر لا يغني عن التحقق.',
+      bad: 'الأنسب هو التحقق من تاريخ الصورة ومصدرها أولًا. الدعاء جميل، لكنه لا يجعل الصورة صحيحة.'
+    },
+    {
+      src: 'رابط · مرسل من رقم غير معروف',
+      msg: 'ربحت جهازًا جديدًا! أدخل اسمك ورقم هوية والدك في هذا الرابط لاستلامه.',
+      opts: [
+        'أدخل البيانات، فالجائزة مغرية',
+        'لا أفتح الرابط، وأخبر وليّ أمري أو معلمي',
+        'أفتحه للاطلاع فقط دون إدخال بيانات'
+      ],
+      correct: 1,
+      good: 'حماية بياناتك وبيانات أسرتك جزء من حماية المجتمع. وإخبار شخص بالغ يوقف انتشار الرابط.',
+      bad: 'الأنسب هو عدم فتح الرابط وإخبار شخص بالغ. الفتح بدافع الفضول قد يكفي للإضرار بجهازك.'
+    },
+    {
+      src: 'منشور · في وسائل التواصل',
+      msg: 'صورة التقطها شخص بجواله لمبنى وآليات في موقع حساس، مع ذكر المكان والوقت.',
+      opts: [
+        'أعيد نشرها، فهي تعبّر عن الفخر',
+        'لا أنشرها ولا أعلّق عليها، وأخبر معلمي ليبلّغ الجهة المختصة',
+        'أنشرها بعد تغطية الوجوه فقط'
+      ],
+      correct: 1,
+      good: 'الفخر لا يستدعي كشف المواقع أو التحركات أو المعدات. ما لا يخدم الأمان قد يخدم غيرنا، والجهات المختصة تقرّر ما يُنشر.',
+      bad: 'الأنسب هو عدم النشر والإبلاغ. تغطية الوجوه لا تخفي المكان والوقت والمعدات، وهذه معلومات حساسة.'
+    }
+  ];
+
+  var ACTS = [
+    'أتحقق من الخبر في مصدره الرسمي قبل أن أعيد إرساله',
+    'أُخبر وليّ أمري أو معلمي عن أي رابط أو رسالة مشبوهة',
+    'أعلّم فردًا من أسرتي طريقة التحقق من الأخبار',
+    'أشارك في عمل تطوعي ينفع مدرستي أو حيّي',
+    'أتأكد من موثوقية أي رابط أو رمز QR عبر خدمة «تحقق» (مع شخص بالغ) قبل فتحه'
+  ];
+
+  var KEY = 'khat-ahmar-proto-v1';
+  var S = { q1: null, shield: {}, sim: {}, act: null };
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) { var p = JSON.parse(raw); if (p && typeof p === 'object') { S.q1 = p.q1 == null ? null : p.q1; S.shield = p.shield || {}; S.sim = p.sim || {}; S.act = p.act == null ? null : p.act; } }
+  } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+
+  /* Mission 1 */
+  function renderQ1() {
+    var box = $('q1-choices'); box.textContent = '';
+    var answered = S.q1 !== null;
+    Q1.options.forEach(function (t, i) {
+      var b = el('button', 'choice', t); b.type = 'button'; b.disabled = answered;
+      if (answered) {
+        if (i === Q1.correct) b.classList.add('is-good');
+        else if (i === S.q1) b.classList.add('is-bad');
+        else b.classList.add('is-dim');
+      }
+      b.addEventListener('click', function () { S.q1 = i; save(); renderQ1(); updateProgress(); });
+      box.appendChild(b);
+    });
+    var fb = $('q1-feedback'); fb.textContent = '';
+    if (answered) {
+      var f = el('div', 'feedback'); f.setAttribute('role', 'status');
+      f.appendChild(el('b', null, S.q1 === Q1.correct ? 'أحسنت. ' : 'قريب. '));
+      f.appendChild(document.createTextNode(S.q1 === Q1.correct ? Q1.good : Q1.bad));
+      fb.appendChild(f);
+      var r = el('button', 'link-btn', 'أعد المحاولة'); r.type = 'button';
+      r.addEventListener('click', function () { S.q1 = null; save(); renderQ1(); updateProgress(); });
+      fb.appendChild(r);
+    }
+  }
+
+  /* Mission 2 */
+  function renderShield() {
+    var host = $('shield'); host.textContent = '';
+    SC.forEach(function (s, idx) {
+      var card = el('div', 'scenario');
+      card.appendChild(el('span', 'num', 'موقف ' + AR(idx + 1) + ' من ' + AR(SC.length)));
+      var m = el('div', 'msg');
+      m.appendChild(el('span', 'src', s.src));
+      m.appendChild(el('q', null, s.msg));
+      card.appendChild(m);
+      var picked = S.shield[idx];
+      var done = picked !== undefined;
+      var ch = el('div', 'choices');
+      s.opts.forEach(function (t, i) {
+        var b = el('button', 'choice', t); b.type = 'button'; b.disabled = done;
+        if (done) {
+          if (i === s.correct) b.classList.add('is-good');
+          else if (i === picked) b.classList.add('is-bad');
+          else b.classList.add('is-dim');
+        }
+        b.addEventListener('click', function () { S.shield[idx] = i; save(); renderShield(); updateProgress(); });
+        ch.appendChild(b);
+      });
+      card.appendChild(ch);
+      if (done) {
+        var f = el('div', 'feedback'); f.setAttribute('role', 'status');
+        f.appendChild(el('b', null, picked === s.correct ? 'تصرف سليم. ' : 'يمكن أفضل. '));
+        f.appendChild(document.createTextNode(picked === s.correct ? s.good : s.bad));
+        card.appendChild(f);
+      }
+      host.appendChild(card);
+    });
+
+    var res = $('shield-result'); res.textContent = '';
+    var count = Object.keys(S.shield).length;
+    if (count === SC.length) {
+      var ok = 0;
+      SC.forEach(function (s, i) { if (S.shield[i] === s.correct) ok++; });
+      var box = el('div', 'result');
+      box.appendChild(el('b', null, 'أصبتَ في ' + AR(ok) + ' من ' + AR(SC.length) + ' مواقف'));
+      box.appendChild(el('p', null, ok === SC.length
+        ? 'قاعدتك الذهبية: لا أنقل ما لم أتحقق منه، ولا أنشر ما يكشف الأمن.'
+        : 'القاعدة المشتركة في المواقف كلها: أتوقف، وأتحقق من المصدر الرسمي، ثم أقرر.'));
+      var r = el('button', 'link-btn', 'أعد المواقف'); r.type = 'button';
+      r.addEventListener('click', function () { S.shield = {}; save(); renderShield(); updateProgress(); });
+      box.appendChild(r);
+      res.appendChild(box);
+    }
+  }
+
+  /* Mission 3: training simulation (no data is sent anywhere) */
+  var SIM = [
+    {
+      kind: 'رابط في رسالة',
+      msg: 'وصلتك رسالة: «تم اختيارك لمنحة طلابية. سجّل بياناتك عبر الرابط».',
+      code: 'https://sa-gov.free-prize.top/claim',
+      opts: [
+        'يبدأ بـ https، إذن هو آمن',
+        'صاحب الموقع الحقيقي هو الجزء الذي يسبق نهاية الرابط (free-prize.top)، أما «sa-gov» فتمويه',
+        'كلمة gov تعني أنه موقع حكومي'
+      ],
+      correct: 1,
+      good: 'اقرأ النطاق من نهايته. المواقع الحكومية السعودية تنتهي عادةً بـ gov.sa. ثم افحص الرابط عبر «تحقق» قبل فتحه.',
+      bad: 'اقرأ النطاق من نهايته: صاحب الموقع هنا هو free-prize.top. قفل https لا يثبت أن الموقع صادق، وكلمة gov يمكن كتابتها في أي رابط.'
+    },
+    {
+      kind: 'رمز QR',
+      msg: 'ملصق QR على عمود في الشارع كُتب فوقه: «امسح لتحصل على وجبتك مجانًا». يبدو أنه ملصق فوق ملصق آخر.',
+      code: '',
+      opts: [
+        'الرمز مطبوع بجودة عالية، فهو موثوق',
+        'ملصق فوق ملصق آخر ووعد بمكافأة كبيرة، وهذه علامات تحذير',
+        'إن كان الوعد جميلًا فلا ضرر من المسح'
+      ],
+      correct: 1,
+      good: 'رمز QR يخفي الرابط، ويمكن لصق رمز آخر فوقه. لا تمسحه قبل فحصه عبر «تحقق»، وأخبر صاحب المكان.',
+      bad: 'الأنسب هو الانتباه لعلامات التحذير: ملصق مُلصق فوق غيره ووعد كبير. جودة الطباعة لا تثبت شيئًا، والمسح قد يفتح رابطًا ضارًا.'
+    },
+    {
+      kind: 'ملف في مجموعة',
+      msg: 'أرسل لك صديق في المجموعة ملفًا اسمه كما يلي، مع عبارة «افتحه بسرعة».',
+      code: 'homework_final.pdf.exe',
+      opts: [
+        'الاسم يحتوي pdf، إذن هو مستند',
+        'الامتداد الأخير exe يعني أنه برنامج وليس مستندًا، وهذه علامة تحذير',
+        'صديقي أرسله، إذن هو آمن'
+      ],
+      correct: 1,
+      good: 'الامتداد الأخير هو الذي يحدد نوع الملف. حساب صديق قد يكون مخترقًا. لا تفتح الملف، وأخبر معلمك أو وليّ أمرك ليفحصه بالغ عبر «تحقق للملفات».',
+      bad: 'الأنسب هو قراءة الامتداد الأخير: exe برنامج وليس مستندًا. وقد يكون حساب صديقك مخترقًا. لا تفتح الملف، وأخبر شخصًا بالغًا.'
+    }
+  ];
+
+  function renderSim() {
+    var host = $('sim'); host.textContent = '';
+    SIM.forEach(function (s, idx) {
+      var card = el('div', 'scenario');
+      card.appendChild(el('span', 'num', 'مثال ' + AR(idx + 1) + ' من ' + AR(SIM.length) + ' · ' + s.kind));
+      var m = el('div', 'msg');
+      m.appendChild(el('q', null, s.msg));
+      if (s.code) m.appendChild(el('code', 'code', s.code));
+      card.appendChild(m);
+      card.appendChild(el('p', 'prompt', 'ما العلامة التي تثير الشك؟'));
+      var picked = S.sim[idx];
+      var done = picked !== undefined;
+      var ch = el('div', 'choices');
+      s.opts.forEach(function (t, i) {
+        var b = el('button', 'choice', t); b.type = 'button'; b.disabled = done;
+        if (done) {
+          if (i === s.correct) b.classList.add('is-good');
+          else if (i === picked) b.classList.add('is-bad');
+          else b.classList.add('is-dim');
+        }
+        b.addEventListener('click', function () { S.sim[idx] = i; save(); renderSim(); updateProgress(); });
+        ch.appendChild(b);
+      });
+      card.appendChild(ch);
+      if (done) {
+        var f = el('div', 'feedback'); f.setAttribute('role', 'status');
+        f.appendChild(el('b', null, picked === s.correct ? 'ملاحظة سليمة. ' : 'تأمّل مرة أخرى. '));
+        f.appendChild(document.createTextNode(picked === s.correct ? s.good : s.bad));
+        card.appendChild(f);
+      }
+      host.appendChild(card);
+    });
+    var res = $('sim-result'); res.textContent = '';
+    if (Object.keys(S.sim).length === SIM.length) {
+      var ok = 0;
+      SIM.forEach(function (s, i) { if (S.sim[i] === s.correct) ok++; });
+      var box = el('div', 'result');
+      box.appendChild(el('b', null, 'أصبتَ في ' + AR(ok) + ' من ' + AR(SIM.length) + ' أمثلة'));
+      box.appendChild(el('p', null, 'الخطوات المشتركة: أتوقف، وأفحص عبر «تحقق» (مع شخص بالغ)، ثم أقرر. هذه نتيجة تدريبية افتراضية وليست نتيجة خدمة «تحقق».'));
+      var r = el('button', 'link-btn', 'أعد التدريب'); r.type = 'button';
+      r.addEventListener('click', function () { S.sim = {}; save(); renderSim(); updateProgress(); });
+      box.appendChild(r);
+      res.appendChild(box);
+    }
+  }
+
+  /* Mission 4 */
+  function renderPledge() {
+    var acts = $('acts'); acts.textContent = '';
+    ACTS.forEach(function (t, i) {
+      var b = el('button', 'choice', t); b.type = 'button';
+      b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', S.act === i ? 'true' : 'false');
+      if (S.act === i) b.classList.add('is-good');
+      b.addEventListener('click', function () { S.act = i; save(); renderPledge(); updateProgress(); });
+      acts.appendChild(b);
+    });
+  }
+
+  /* Reset for the next student (inline two-step confirm, since dialogs are blocked) */
+  var confirming = false;
+  function resetAll() {
+    S = { q1: null, shield: {}, sim: {}, act: null };
+    save(); confirming = false;
+    renderReset(); renderQ1(); renderShield(); renderSim(); renderPledge(); updateProgress();
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  function renderReset() {
+    var z = $('reset-zone'); z.textContent = '';
+    if (!confirming) {
+      var b = el('button', 'reset-btn', 'طالب جديد'); b.type = 'button';
+      b.addEventListener('click', function () { confirming = true; renderReset(); });
+      z.appendChild(b);
+    } else {
+      z.appendChild(el('span', 'reset-ask', 'سيُمسح كل ما اختاره الطالب الحالي.'));
+      var y = el('button', 'reset-btn reset-yes', 'نعم، ابدأ لطالب جديد'); y.type = 'button';
+      y.addEventListener('click', resetAll);
+      var n = el('button', 'reset-btn', 'إلغاء'); n.type = 'button';
+      n.addEventListener('click', function () { confirming = false; renderReset(); });
+      z.appendChild(y); z.appendChild(n);
+    }
+  }
+
+  /* Progress */
+  function updateProgress() {
+    var d1 = S.q1 === Q1.correct;
+    var d2 = Object.keys(S.shield).length === SC.length;
+    var d3 = Object.keys(S.sim).length === SIM.length;
+    var d4 = S.act !== null;
+    var flags = [d1, d2, d3, d4];
+    var steps = document.querySelectorAll('#progress .step');
+    for (var i = 0; i < steps.length; i++) steps[i].setAttribute('data-done', flags[i] ? 'true' : 'false');
+  }
+
+  renderReset(); renderQ1(); renderShield(); renderSim(); renderPledge(); updateProgress();
+
+  /* Carousel */
+  (function () {
+    var car = $('carousel'); if (!car) return;
+    var slides = car.querySelectorAll('.slide');
+    var dotsBox = $('c-dots'), count = $('c-count'), pauseBtn = $('c-pause');
+    var cur = 0, timer = null, held = false;
+    var playing = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var dots = [];
+
+    for (var d = 0; d < slides.length; d++) {
+      (function (d) {
+        var b = el('button', 'c-dot'); b.type = 'button';
+        b.setAttribute('aria-label', 'الانتقال إلى الصورة ' + AR(d + 1));
+        b.addEventListener('click', function () { show(d); restart(); });
+        dotsBox.appendChild(b); dots.push(b);
+      })(d);
+    }
+
+    function show(n) {
+      cur = (n + slides.length) % slides.length;
+      for (var k = 0; k < slides.length; k++) {
+        var on = k === cur;
+        slides[k].classList.toggle('is-active', on);
+        slides[k].setAttribute('aria-hidden', on ? 'false' : 'true');
+        if (on) dots[k].setAttribute('aria-current', 'true'); else dots[k].removeAttribute('aria-current');
+      }
+      count.textContent = AR(cur + 1) + ' / ' + AR(slides.length);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function start() { stop(); if (playing && !held) timer = setInterval(function () { show(cur + 1); }, 5000); }
+    function restart() { start(); }
+    function label() { pauseBtn.textContent = playing ? 'إيقاف' : 'تشغيل'; pauseBtn.setAttribute('aria-pressed', playing ? 'false' : 'true'); }
+
+    $('c-next').addEventListener('click', function () { show(cur + 1); restart(); });
+    $('c-prev').addEventListener('click', function () { show(cur - 1); restart(); });
+    pauseBtn.addEventListener('click', function () { playing = !playing; label(); start(); });
+
+    car.addEventListener('mouseenter', function () { held = true; stop(); });
+    car.addEventListener('mouseleave', function () { held = false; start(); });
+    car.addEventListener('focusin', function () { held = true; stop(); });
+    car.addEventListener('focusout', function () { held = false; start(); });
+    car.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { show(cur + 1); e.preventDefault(); }
+      if (e.key === 'ArrowRight') { show(cur - 1); e.preventDefault(); }
+    });
+
+    var x0 = null;
+    car.addEventListener('pointerdown', function (e) { x0 = e.clientX; });
+    car.addEventListener('pointerup', function (e) {
+      if (x0 === null) return;
+      var dx = e.clientX - x0; x0 = null;
+      if (Math.abs(dx) > 45) { show(dx < 0 ? cur + 1 : cur - 1); restart(); }
+    });
+    car.addEventListener('pointercancel', function () { x0 = null; });
+
+    label(); show(0); start();
+  })();
+})();
+</script>
+
+</body>
+</html>
