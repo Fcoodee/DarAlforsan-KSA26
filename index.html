@@ -223,6 +223,8 @@ section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 4.6vw, 2
 .c-dot { position: relative; width: 10px; height: 10px; border-radius: 50%; border: 1px solid #fff; background: transparent; padding: 0; cursor: pointer; }
 .c-dot::after { content: ""; position: absolute; inset: -14px -4px; }
 .c-dot[aria-current="true"] { background: #fff; width: 26px; border-radius: 6px; }
+.motion-note { margin: 8px 0 0; font-size: .85rem; color: var(--muted); line-height: 1.8; }
+.c-pause[aria-pressed="true"] { background: var(--neon); border-color: var(--neon); color: #04230F; font-weight: 700; }
 .c-pause { background: none; border: 1px solid rgba(255,255,255,.6); color: #fff; border-radius: 999px; padding: 0 16px; min-height: 40px; font-size: .85rem; cursor: pointer; line-height: 1.9; }
 .c-count { font-size: .85rem; font-variant-numeric: tabular-nums; }
 .carousel :focus-visible { outline-color: #fff; }
@@ -405,6 +407,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
           <button class="c-pause" id="c-pause" type="button">إيقاف</button>
         </div>
       </div>
+      <p class="motion-note" id="motion-note" hidden>الحركة متوقفة لأن جهازك مضبوط على تقليل الحركة (إزالة الرسوم المتحركة أو توفير الطاقة). يمكنك تشغيل المعرض بزر «تشغيل»، أو التصفح بالأسهم.</p>
     </section>
 
     <section id="m2">
@@ -811,6 +814,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     function stop() { if (timer) { clearInterval(timer); timer = null; } }
     function start() { stop(); if (playing && !held) timer = setInterval(function () { show(cur + 1); }, 5000); }
     function restart() { start(); }
+    (function () {
+      var note = $('motion-note');
+      if (note && !playing) note.hidden = false;
+    })();
     function label() { pauseBtn.textContent = playing ? 'إيقاف' : 'تشغيل'; pauseBtn.setAttribute('aria-pressed', playing ? 'false' : 'true'); }
 
     $('c-next').addEventListener('click', function () { show(cur + 1); restart(); });
