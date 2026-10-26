@@ -1,16 +1,4 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0B3D28">
-<style>
-:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-body { margin: 0; }
-img { max-width: 100%; }
-[hidden] { display: none !important; }
-</style>
-<title>السعودية خط أحمر</title>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0B3D28"><style>:root{color-scheme:light}html{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><title>السعودية خط أحمر</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@600;700;800&family=Tajawal:wght@400;500;700&display=swap">
@@ -116,8 +104,30 @@ section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 4.6vw, 2
 .article .tag { font-size: .85rem; color: var(--muted); }
 .article .text { font-family: var(--font-verse); font-size: clamp(1.35rem, 4vw, 1.8rem); line-height: 2; margin-top: 4px; }
 .verbs { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 14px; }
-.verb { border-top: 2px solid var(--accent); padding-top: 8px; min-width: 0; }
-.verb b { display: block; font-family: var(--font-display); font-size: 1.15rem; color: var(--accent); }
+.verb { padding-top: 6px; min-width: 0; }
+.verb b { display: block; font-family: var(--font-display); font-size: 1.15rem; color: var(--accent);
+  text-shadow: 0 0 6px var(--neon-glow), 0 0 14px var(--neon-glow);
+  animation: verb-glow 4.5s ease-in-out infinite; }
+.verb:nth-child(2) b { animation-delay: .6s; }
+.verb:nth-child(3) b { animation-delay: 1.2s; }
+.verb:nth-child(4) b { animation-delay: 1.8s; }
+@keyframes verb-glow {
+  0%, 100% { text-shadow: 0 0 4px var(--neon-glow), 0 0 10px var(--neon-glow); }
+  50%      { text-shadow: 0 0 7px var(--neon-glow), 0 0 18px var(--neon-glow); }
+}
+/* الخط الأخضر الواصل بين الأفعال الأربعة + العلم المتحرك من «أعرف» (يمين) إلى «أسهم» (يسار) */
+.flag-track { position: relative; height: 34px; margin-top: 14px; }
+.flag-track::after { content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 2px;
+  background: var(--accent); border-radius: 2px; box-shadow: 0 0 8px var(--neon-glow); }
+.flag { position: absolute; bottom: 2px; right: 0; width: 33px; height: 22px; display: block;
+  animation: flag-travel 18s linear infinite; }
+.flag svg { display: block; width: 100%; height: 100%; border-radius: 1px; box-shadow: 0 0 8px var(--neon-glow); }
+@keyframes flag-travel {
+  0%   { right: 0; opacity: 0; }
+  6%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { right: calc(100% - 33px); opacity: 0; }
+}
 .verb span { font-size: .95rem; color: var(--muted); line-height: 1.7; display: block; }
 
 .q { margin-top: 20px; }
@@ -303,12 +313,12 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 }
 @media (prefers-reduced-motion: reduce) {
   .slide, .slide.is-active, .choice { transition: none; }
+  .flag { animation: none; opacity: 1; right: 0; }
+  .verb b { animation: none; }
 }
 </style>
 
-</head>
-<body>
-<div dir="rtl" lang="ar">
+</head><body><div dir="rtl" lang="ar">
   <div class="topbar">
     <div class="wrap">
       <span class="topbar-hint">ضغطة واحدة تمسح كل الاختيارات لبدء مشاركة جديدة</span>
@@ -356,6 +366,14 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <div class="article">
         <span class="tag">المادة الرابعة والثلاثون · النظام الأساسي للحكم</span>
         <p class="text">الدفاع عن العقيدة الإسلامية، والمجتمع، والوطن واجب على كل مواطن.</p>
+        <div class="flag-track" aria-hidden="true">
+          <!-- علم المملكة: رسم تقريبي (نسبة 2:3، أخضر، الشهادتان بالأبيض، سيف أسفلهما). يُستبدل بملف SVG الرسمي المعتمد عند توفره. العلم لا يُنكَّس ولا يلامس الأرض ولا يُستخدم تجاريًا. -->
+          <span class="flag"><svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <rect width="60" height="40" fill="#006C35"/>
+            <text x="30" y="19" text-anchor="middle" direction="rtl" fill="#FFFFFF" font-family="'Amiri Quran','Amiri','Noto Naskh Arabic',serif" font-size="8.5">لا إله إلا الله محمد رسول الله</text>
+            <path d="M12 27.5 H46 M46 27.5 V25 M46 27.5 V30 M48 27.5 H50" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          </svg></span>
+        </div>
         <div class="verbs">
           <div class="verb"><b>أعرف</b><span>أفهم ما يهدد أمن مجتمعي وكيف ينتشر.</span></div>
           <div class="verb"><b>أتحقق</b><span>لا أنقل خبرًا قبل التأكد من مصدره الرسمي.</span></div>
@@ -825,6 +843,4 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   })();
 })();
 </script>
-
-</body>
-</html>
+</body></html>
