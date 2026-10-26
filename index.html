@@ -234,6 +234,7 @@ section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 4.6vw, 2
 .sum-pledge { margin: 8px 0; font-weight: 700; line-height: 1.8; }
 .sum-close { margin: 10px 0 0; font-family: var(--font-display); font-weight: 800; color: var(--accent); }
 .sum-hint { margin: 6px 0 0; font-size: .85rem; color: var(--muted); }
+.gal-title { margin: 0 0 10px; text-align: center; font-family: var(--font-display); color: var(--accent); text-shadow: 0 0 8px var(--neon-glow); }
 .motion-note { margin: 8px 0 0; font-size: .85rem; color: var(--muted); line-height: 1.8; }
 .c-pause[aria-pressed="true"] { background: var(--neon); border-color: var(--neon); color: #04230F; font-weight: 700; }
 .c-pause { background: none; border: 1px solid rgba(255,255,255,.6); color: #fff; border-radius: 999px; padding: 0 16px; min-height: 40px; font-size: .85rem; cursor: pointer; line-height: 1.9; }
@@ -404,12 +405,24 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     </section>
 
     <section id="gallery" aria-label="معرض الصور">
-      <div class="carousel" id="carousel" role="region" aria-roledescription="carousel" aria-label="معرض صور" tabindex="0">
+      <h2 class="gal-title">#وطن_آمن</h2>
+      <div class="carousel" id="carousel" role="region" aria-roledescription="carousel" aria-label="#وطن_آمن" tabindex="0">
         <div class="slide is-active"><img class="bg" src="img/s6.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s6.jpg" alt="تصميم أخضر بارز لخريطة المملكة وعبارة «ربّ اجعل هذا البلد آمنًا»"></div>
         <div class="slide"><img class="bg" src="img/s2.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s2.jpg" alt="دعاء بحفظ البلاد مكتوب بخط عربي أخضر تحت شعار النخلة والسيفين"></div>
         <div class="slide"><img class="bg" src="img/s4.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s4.jpg" alt="تصميم لكلمة «السعودية» يقطعها خط أحمر"></div>
         <div class="slide"><img class="bg" src="img/s3.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s3.jpg" alt="مشاهد متتابعة: شارة على الزي العسكري، وتحية للعلم، وخريطة المملكة، وطائرات مروحية عند الغروب"></div>
         <div class="slide"><img class="bg" src="img/s5.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s5.jpg" alt="صورة بالأبيض والأسود لشخصين بالزي الرسمي مع عبارة «يا وطنًا فيك خير وفيك خيرة»"></div>
+        <div class="slide"><img class="bg" src="img/n1.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n1.jpg" alt="ملصق «آمن» من الهيئة الوطنية للأمن السيبراني: تحديث الأجهزة سدّ لثغراتها وتعزيز لحمايتها" loading="lazy"></div>
+        <div class="slide"><img class="bg" src="img/n2.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n2.jpg" alt="ملصق «آمن»: لا تفتح كل أبوابك بمفتاح واحد، اختر كلمة مرور قوية ومختلفة لكل حساب" loading="lazy"></div>
+        <div class="slide"><img class="bg" src="img/n3.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n3.jpg" alt="ملصق «آمن»: وعيٌ يسبق التفاعل، تأكد من موثوقية الروابط والملفات ورموز الاستجابة السريعة عبر خدمة «تحقق»" loading="lazy"></div>
+        <div class="slide"><img class="bg" src="img/n4.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n4.jpg" alt="ملصق «آمن»: الرابط خطوة والتحقق يسبقها عبر خدمة «تحقق»" loading="lazy"></div>
+        <div class="slide"><img class="bg" src="img/n5.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n5.jpg" alt="ملصق «آمن»: حفظًا لأمنك السيبراني تحقق من موثوقية رموز الاستجابة السريعة" loading="lazy"></div>
+        <div class="slide"><img class="bg" src="img/n6.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n6.jpg" alt="ملصق «آمن»: تحقق قبل التجاوب مع رموز الاستجابة السريعة" loading="lazy"></div>
+        <div class="slide"><img class="bg" src="img/n7.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n7.jpg" alt="ملصق «آمن»: بإمكانك الآن التأكد من موثوقية الرابط أو الملف أو الرمز عبر خدمة «تحقق»" loading="lazy"></div>
+        <div class="slide"><img class="bg" src="img/n8.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n8.jpg" alt="ملصق «آمن»: فحص الملفات ممارسة استباقية تعزز أمنك السيبراني" loading="lazy"></div>
+        <div class="slide"><img class="bg" src="img/n9.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n9.jpg" alt="ملصق «آمن»: فحص الملفات خطوة استباقية تعزز الأمان" loading="lazy"></div>
+        <div class="slide"><img class="bg" src="img/n10.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n10.jpg" alt="ملصق «آمن»: الرقابة الأبوية حماية للأطفال" loading="lazy"></div>
+        <div class="slide"><img class="bg" src="img/n11.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n11.jpg" alt="ملصق «آمن»: أجهزة ذكية في المنزل تتطلب حماية مستمرة" loading="lazy"></div>
         <button class="c-btn c-prev" id="c-prev" type="button" aria-label="الصورة السابقة">›</button>
         <button class="c-btn c-next" id="c-next" type="button" aria-label="الصورة التالية">‹</button>
         <div class="c-bar">
