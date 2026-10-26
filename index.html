@@ -236,10 +236,22 @@ section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 4.6vw, 2
 .sum-hint { margin: 6px 0 0; font-size: .85rem; color: var(--muted); }
 .brand-row { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 4vw, 32px); }
 .brand-band .brand-row img { margin-inline: 0; }
-.brand-band .brand-flag { height: clamp(56px, 12vw, 84px); }
+.brand-band { padding-bottom: 0; }
+.brand-row { align-items: flex-end; }
+.brand-band .brand-logo { margin-bottom: 14px; }
+.brand-band .brand-flag { height: clamp(96px, 22vw, 132px); width: auto; margin-bottom: -1px; }
 .title-block { position: relative; isolation: isolate; }
 .emblem-bg { position: absolute; z-index: -1; top: 50%; left: 50%; transform: translate(-50%, -50%);
   height: clamp(220px, 62vw, 340px); width: auto; max-width: none; opacity: .2; pointer-events: none; user-select: none; }
+/* شعار النخلة والسيفين بخطوط باهتة خلف كل قسم (يتلوّن بحسب السمة) */
+:root { --emblem-line: #0B6B3A; --emblem-op: .08; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --emblem-line: #FFFFFF; --emblem-op: .09; } }
+:root[data-theme="dark"] { --emblem-line: #FFFFFF; --emblem-op: .09; }
+main > section { position: relative; isolation: isolate; }
+main > section::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: var(--emblem-line); opacity: var(--emblem-op);
+  -webkit-mask: url("img/emblem-outline.png") center / auto min(320px, 80%) no-repeat;
+          mask: url("img/emblem-outline.png") center / auto min(320px, 80%) no-repeat; }
 .gal-title { margin: 0 0 10px; text-align: center; font-family: var(--font-display); color: var(--accent); text-shadow: 0 0 8px var(--neon-glow); }
 .motion-note { margin: 8px 0 0; font-size: .85rem; color: var(--muted); line-height: 1.8; }
 .c-pause[aria-pressed="true"] { background: var(--neon); border-color: var(--neon); color: #04230F; font-weight: 700; }
@@ -323,7 +335,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @media (max-height: 520px) and (orientation: landscape) {
   .hero { padding-block: 22px 26px; }
   .brand-band img { height: 56px; }
-  .brand-band .brand-flag { height: 50px; }
+  .brand-band .brand-flag { height: 84px; }
   .carousel { height: 80vh; height: 80dvh; min-height: 240px; }
 }
 /* Windows high contrast and similar forced-colors modes */
@@ -353,7 +365,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     <div class="toast-box"><span id="toast-text"></span><button type="button" id="toast-undo">تراجع</button></div>
   </div>
   <div class="brand-band">
-    <div class="wrap brand-row"><img class="brand-flag" src="img/flag.png" alt="علم المملكة العربية السعودية"><img src="img/daf.png" alt="شعار مدارس دار الفرسان: نفكر، نتأمل، نتعلم"></div>
+    <div class="wrap brand-row"><img class="brand-logo" src="img/daf.png" alt="شعار مدارس دار الفرسان: نفكر، نتأمل، نتعلم"><img class="brand-flag" src="img/flag-pole.png" alt="علم المملكة العربية السعودية"></div>
   </div>
   <header class="hero">
     <div class="mark" role="img" aria-label="السعودية خط أحمر">
