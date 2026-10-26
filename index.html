@@ -223,6 +223,15 @@ section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 4.6vw, 2
 .c-dot { position: relative; width: 10px; height: 10px; border-radius: 50%; border: 1px solid #fff; background: transparent; padding: 0; cursor: pointer; }
 .c-dot::after { content: ""; position: absolute; inset: -14px -4px; }
 .c-dot[aria-current="true"] { background: #fff; width: 26px; border-radius: 6px; }
+.summary { margin-top: 28px; padding: 18px; border: 2px solid var(--accent); border-radius: 16px; background: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--neon), 0 0 18px var(--neon-glow); }
+.summary h2 { margin-top: 0; }
+.sum-list { list-style: none; margin: 10px 0; padding: 0; display: grid; gap: 8px; }
+.sum-list li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.sum-list li b { color: var(--accent); white-space: nowrap; }
+.sum-pledge { margin: 8px 0; font-weight: 700; line-height: 1.8; }
+.sum-close { margin: 10px 0 0; font-family: var(--font-display); font-weight: 800; color: var(--accent); }
+.sum-hint { margin: 6px 0 0; font-size: .85rem; color: var(--muted); }
 .motion-note { margin: 8px 0 0; font-size: .85rem; color: var(--muted); line-height: 1.8; }
 .c-pause[aria-pressed="true"] { background: var(--neon); border-color: var(--neon); color: #04230F; font-weight: 700; }
 .c-pause { background: none; border: 1px solid rgba(255,255,255,.6); color: #fff; border-radius: 999px; padding: 0 16px; min-height: 40px; font-size: .85rem; cursor: pointer; line-height: 1.9; }
@@ -398,7 +407,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
         <div class="slide"><img class="bg" src="img/s4.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s4.jpg" alt="تصميم لكلمة «السعودية» يقطعها خط أحمر"></div>
         <div class="slide"><img class="bg" src="img/s3.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s3.jpg" alt="مشاهد متتابعة: شارة على الزي العسكري، وتحية للعلم، وخريطة المملكة، وطائرات مروحية عند الغروب"></div>
         <div class="slide"><img class="bg" src="img/s5.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s5.jpg" alt="صورة بالأبيض والأسود لشخصين بالزي الرسمي مع عبارة «يا وطنًا فيك خير وفيك خيرة»"></div>
-        <div class="slide"><img class="bg" src="img/s1.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s1.jpg" alt="جنود في ساحة تصطف فيها آليات عند الغروب"></div>
         <button class="c-btn c-prev" id="c-prev" type="button" aria-label="الصورة السابقة">›</button>
         <button class="c-btn c-next" id="c-next" type="button" aria-label="الصورة التالية">‹</button>
         <div class="c-bar">
@@ -462,6 +470,15 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <h2>ألتزم بفعل</h2>
       <p class="intro">الانتماء يظهر في السلوك. اختر فعلًا واحدًا تلتزم به.</p>
       <div class="acts" id="acts" role="radiogroup" aria-label="الفعل الذي ألتزم به"></div>
+    </section>
+
+    <section id="summary" class="summary" hidden aria-live="polite">
+      <p class="mission-label">اكتملت المهام</p>
+      <h2>ملخص مشاركتك</h2>
+      <ul class="sum-list" id="sum-list"></ul>
+      <p class="sum-pledge" id="sum-pledge"></p>
+      <p class="sum-close">#السعودية_خط_أحمر</p>
+      <p class="sum-hint">لبدء مشاركة جديدة اضغط «مشاركة جديدة» في أعلى الصفحة.</p>
     </section>
   </main>
 </div>
@@ -779,6 +796,29 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     var flags = [d1, d2, d3, d4];
     var steps = document.querySelectorAll('#progress .step');
     for (var i = 0; i < steps.length; i++) steps[i].setAttribute('data-done', flags[i] ? 'true' : 'false');
+    renderSummary();
+  }
+
+  /* Closing summary: appears once every mission has an answer */
+  function renderSummary() {
+    var box = $('summary'); if (!box) return;
+    var complete = S.q1 !== null && Object.keys(S.shield).length === SC.length &&
+      Object.keys(S.sim).length === SIM.length && S.act !== null;
+    var wasHidden = box.hidden;
+    box.hidden = !complete;
+    if (!complete) return;
+    var okS = 0, okV = 0;
+    SC.forEach(function (s, i) { if (S.shield[i] === s.correct) okS++; });
+    SIM.forEach(function (s, i) { if (S.sim[i] === s.correct) okV++; });
+    var rows = [
+      ['أفهم الواجب', S.q1 === Q1.correct ? 'إجابة صحيحة' : 'تحتاج مراجعة'],
+      ['درع الشائعات', AR(okS) + ' من ' + AR(SC.length)],
+      ['تحقق قبل أن تفتح', AR(okV) + ' من ' + AR(SIM.length)]
+    ];
+    var list = $('sum-list'); list.textContent = '';
+    rows.forEach(function (r) { var li = el('li'); li.appendChild(el('span', null, r[0])); li.appendChild(el('b', null, r[1])); list.appendChild(li); });
+    $('sum-pledge').textContent = 'التزامي: ' + ACTS[S.act];
+    if (wasHidden) { try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {} }
   }
 
   renderAll();
