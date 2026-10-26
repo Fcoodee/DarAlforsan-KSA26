@@ -29,6 +29,7 @@ img { max-width: 100%; }
   --hero-bg: #0B3D28;
   --hero-fg: #F2F7F3;
   --band-bg: #FFFFFF; /* logos sit on white in both themes */
+  --mark-red: #FF4D5E; /* red stroke on the dark green hero, same in both themes */
   --good: #0B6B3F;
   --good-soft: #DDF0E4;
   --bad: #A4162D;
@@ -83,12 +84,16 @@ button { font: inherit; color: inherit; -webkit-appearance: none; appearance: no
 .title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 5.8vw, 2.7rem); line-height: 1.6; text-wrap: balance; }
 .years { margin-top: 10px; font-weight: 600; font-size: 1.05rem; font-variant-numeric: tabular-nums; color: rgba(242,247,243,.88); color: color-mix(in srgb, var(--hero-fg) 88%, transparent); }
 .years .sep { opacity: .55; padding-inline: .7em; }
+/* Full-bleed wordmark: the stroke lines are tatweel text, so they join the letters and run to the screen edges */
+.mark { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.6rem, 11vw, 5.4rem); line-height: 1.15; color: var(--hero-fg); overflow: hidden; margin-bottom: 28px; }
+.mk-row { display: flex; align-items: flex-start; white-space: nowrap; }
+.mk-top { padding-inline-start: max(12%, env(safe-area-inset-right, 0px)); margin-bottom: -.1em; }
+.mk-bot { padding-inline-end: max(12%, env(safe-area-inset-left, 0px)); margin-top: -.2em; }
+.mk-word { flex: none; }
+.mk-fill { flex: 1; min-width: 0; overflow: hidden; direction: rtl; }
+.mk-red { height: .085em; background: var(--mark-red); }
 .hero-rule { height: 1px; background: rgba(242,247,243,.3); background: color-mix(in srgb, var(--hero-fg) 30%, transparent); margin-block: 26px 22px; }
 .verse { font-family: var(--font-verse); font-size: clamp(1.4rem, 4.4vw, 2rem); line-height: 1.9; font-weight: 400; text-align: center; }
-.wordmark { margin-top: 20px; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 7vw, 3.2rem); line-height: 1.2; overflow: hidden; }
-.wordmark .a { display: block; text-align: right; }
-.wordmark .b { display: block; text-align: left; }
-.redline { height: 6px; background: var(--red); margin-block: 4px; }
 .lede { margin-top: 22px; margin-inline: auto; max-width: 34em; font-size: 1.1rem; color: rgba(242,247,243,.86); color: color-mix(in srgb, var(--hero-fg) 86%, transparent); }
 .proto-tag { display: inline-block; margin-top: 18px; padding: 2px 12px; border: 1px solid rgba(242,247,243,.45); border: 1px solid color-mix(in srgb, var(--hero-fg) 45%, transparent); border-radius: 999px; font-size: .85rem; }
 
@@ -198,7 +203,7 @@ section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 4.6vw, 2
 /* Notes */
 main { padding-bottom: 48px; }
 
-/* Sticky reset bar for the next student: stays visible across the whole page */
+/* Sticky reset bar for the next participation: stays visible across the whole page */
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--hero-bg); }
 .topbar {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
@@ -289,10 +294,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 <div dir="rtl" lang="ar">
   <div class="topbar">
     <div class="wrap">
-      <span class="topbar-hint">ضغطة واحدة تمسح كل اختيارات الطالب</span>
-      <button class="reset-btn" id="reset-btn" type="button" aria-label="طالب جديد: مسح كل الاختيارات">
+      <span class="topbar-hint">ضغطة واحدة تمسح كل الاختيارات لبدء مشاركة جديدة</span>
+      <button class="reset-btn" id="reset-btn" type="button" aria-label="مشاركة جديدة: مسح كل الاختيارات">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-        <span>طالب جديد</span>
+        <span>مشاركة جديدة</span>
       </button>
     </div>
   </div>
@@ -303,16 +308,16 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     <div class="wrap"><img src="img/daf.png" alt="شعار مدارس دار الفرسان: نفكر، نتأمل، نتعلم"></div>
   </div>
   <header class="hero">
+    <div class="mark" role="img" aria-label="السعودية خط أحمر">
+      <div class="mk-row mk-top" aria-hidden="true"><span class="mk-word">السعـ</span><span class="mk-fill">ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ</span></div>
+      <div class="mk-red" aria-hidden="true"></div>
+      <div class="mk-row mk-bot" aria-hidden="true"><span class="mk-fill">ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ</span><span class="mk-word">ـودية</span></div>
+    </div>
     <div class="wrap">
       <h1 class="title">مبادرة تعزيز الوعي الوطني لدى طلاب مدارس دار الفرسان الأهلية</h1>
       <p class="years"><span dir="ltr">1448 - 1449</span> هـ <span class="sep">|</span> <span dir="ltr">2026 - 2027</span> م</p>
       <div class="hero-rule" aria-hidden="true"></div>
       <p class="verse">﴿رَبِّ اجْعَلْ هَٰذَا الْبَلَدَ آمِنًا﴾</p>
-      <div class="wordmark" aria-label="السعودية خط أحمر">
-        <span class="a" aria-hidden="true">السعــــــــ</span>
-        <div class="redline" aria-hidden="true"></div>
-        <span class="b" aria-hidden="true">ـــــــودية</span>
-      </div>
       <p class="lede">حماية الوطن واجبٌ يمارسه كل مواطن، والطالب يبدأ بما يقدر عليه اليوم: أن يعرف، ويتحقق، ويُسهم.</p>
       <span class="proto-tag">نموذج أولي للعرض والنقاش</span>
     </div>
@@ -715,13 +720,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     for (var i = 0; i < onReset.length; i++) onReset[i]();
     try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
     try { window.scrollTo(0, 0); } catch (e) {}
-    showToast('تم مسح كل الاختيارات. الصفحة جاهزة لطالب جديد.', true);
+    showToast('تم مسح كل الاختيارات. الصفحة جاهزة لمشاركة جديدة.', true);
   }
   function undoReset() {
     if (!undoSnap) return;
     try { S = JSON.parse(undoSnap); } catch (e) { return; }
     undoSnap = null; save(); renderAll();
-    showToast('أُعيدت اختيارات الطالب السابق.', false);
+    showToast('أُعيدت اختيارات المشاركة السابقة.', false);
   }
   $('reset-btn').addEventListener('click', resetAll);
   $('toast-undo').addEventListener('click', undoReset);
