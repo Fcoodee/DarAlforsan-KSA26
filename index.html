@@ -198,18 +198,40 @@ section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 4.6vw, 2
 /* Notes */
 main { padding-bottom: 48px; }
 
-/* Reset bar for the next student */
-.topbar { background: var(--hero-bg); color: var(--hero-fg); padding-block: 8px; }
-.topbar .wrap { display: flex; }
-#reset-zone { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.reset-ask { font-size: .9rem; opacity: .9; }
-.reset-btn {
-  background: transparent; color: var(--hero-fg); border: 1px solid rgba(242,247,243,.6); border: 1px solid color-mix(in srgb, var(--hero-fg) 60%, transparent);
-  border-radius: 999px; padding: 4px 18px; min-height: 40px; font-size: .92rem; line-height: 1.8; cursor: pointer;
+/* Sticky reset bar for the next student: stays visible across the whole page */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--hero-bg); }
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: var(--hero-bg); color: var(--hero-fg); padding-block: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.14);
 }
-@media (hover: hover) { .reset-btn:hover { border-color: var(--hero-fg); } }
-.reset-yes { background: var(--hero-fg); color: var(--hero-bg); border-color: var(--hero-fg); font-weight: 700; }
-.topbar :focus-visible { outline-color: var(--hero-fg); }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.topbar-hint { font-size: .9rem; min-width: 0; color: rgba(242,247,243,.85); }
+.reset-btn {
+  display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+  background: #C8102E; color: #FFFFFF; border: 1px solid rgba(255,255,255,.55); border-radius: 999px;
+  padding: 6px 22px; min-height: 44px; font-weight: 700; font-size: 1rem; line-height: 1.6; cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,.28);
+}
+.reset-btn svg { width: 20px; height: 20px; flex: none; }
+@media (hover: hover) { .reset-btn:hover { background: #A60D26; } }
+.reset-btn:active { transform: scale(.97); }
+.topbar :focus-visible { outline-color: #FFFFFF; }
+.toast {
+  position: fixed; inset-inline: 0; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 30;
+  display: flex; justify-content: center; pointer-events: none;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.toast-box {
+  pointer-events: auto; display: flex; align-items: center; gap: 14px; max-width: 100%;
+  background: var(--fg); color: var(--bg); border-radius: 999px; padding: 6px 8px 6px 20px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.35); font-size: .95rem; line-height: 1.6;
+}
+.toast-box span { min-width: 0; }
+.toast-box button {
+  flex: none; background: transparent; color: inherit; border: 1px solid currentColor; border-radius: 999px;
+  padding: 4px 18px; min-height: 40px; font-weight: 700; cursor: pointer;
+}
 
 @media (max-width: 520px) {
   body { font-size: 17px; }
@@ -222,7 +244,10 @@ main { padding-bottom: 48px; }
   .title { font-size: 1.6rem; }
   .choice { padding: 10px 12px; }
   .c-btn { width: 40px; height: 40px; }
-  .reset-ask { flex-basis: 100%; }
+}
+@media (max-width: 480px) {
+  .topbar-hint { display: none; }
+  .topbar .wrap { justify-content: center; }
 }
 /* Tablets: iPad and Android tablets, portrait and landscape */
 @media (min-width: 700px) {
@@ -263,7 +288,16 @@ main { padding-bottom: 48px; }
 <body>
 <div dir="rtl" lang="ar">
   <div class="topbar">
-    <div class="wrap"><div id="reset-zone"></div></div>
+    <div class="wrap">
+      <span class="topbar-hint">ضغطة واحدة تمسح كل اختيارات الطالب</span>
+      <button class="reset-btn" id="reset-btn" type="button" aria-label="طالب جديد: مسح كل الاختيارات">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        <span>طالب جديد</span>
+      </button>
+    </div>
+  </div>
+  <div class="toast" id="toast" hidden aria-live="polite">
+    <div class="toast-box"><span id="toast-text"></span><button type="button" id="toast-undo">تراجع</button></div>
   </div>
   <div class="brand-band">
     <div class="wrap"><img src="img/daf.png" alt="شعار مدارس دار الفرسان: نفكر، نتأمل، نتعلم"></div>
@@ -662,29 +696,35 @@ main { padding-bottom: 48px; }
     });
   }
 
-  /* Reset for the next student (inline two-step confirm, since dialogs are blocked) */
-  var confirming = false;
+  /* Reset for the next student: one tap clears every choice, with a short undo */
+  var onReset = [];
+  var undoSnap = null, toastTimer = null;
+  function renderAll() { renderQ1(); renderShield(); renderSim(); renderPledge(); updateProgress(); }
+  function showToast(text, withUndo) {
+    var t = $('toast');
+    $('toast-text').textContent = text;
+    $('toast-undo').hidden = !withUndo;
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.hidden = true; undoSnap = null; }, 7000);
+  }
   function resetAll() {
+    undoSnap = JSON.stringify(S);
     S = { q1: null, shield: {}, sim: {}, act: null };
-    save(); confirming = false;
-    renderReset(); renderQ1(); renderShield(); renderSim(); renderPledge(); updateProgress();
+    save(); renderAll();
+    for (var i = 0; i < onReset.length; i++) onReset[i]();
+    try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
     try { window.scrollTo(0, 0); } catch (e) {}
+    showToast('تم مسح كل الاختيارات. الصفحة جاهزة لطالب جديد.', true);
   }
-  function renderReset() {
-    var z = $('reset-zone'); z.textContent = '';
-    if (!confirming) {
-      var b = el('button', 'reset-btn', 'طالب جديد'); b.type = 'button';
-      b.addEventListener('click', function () { confirming = true; renderReset(); });
-      z.appendChild(b);
-    } else {
-      z.appendChild(el('span', 'reset-ask', 'سيُمسح كل ما اختاره الطالب الحالي.'));
-      var y = el('button', 'reset-btn reset-yes', 'نعم، ابدأ لطالب جديد'); y.type = 'button';
-      y.addEventListener('click', resetAll);
-      var n = el('button', 'reset-btn', 'إلغاء'); n.type = 'button';
-      n.addEventListener('click', function () { confirming = false; renderReset(); });
-      z.appendChild(y); z.appendChild(n);
-    }
+  function undoReset() {
+    if (!undoSnap) return;
+    try { S = JSON.parse(undoSnap); } catch (e) { return; }
+    undoSnap = null; save(); renderAll();
+    showToast('أُعيدت اختيارات الطالب السابق.', false);
   }
+  $('reset-btn').addEventListener('click', resetAll);
+  $('toast-undo').addEventListener('click', undoReset);
 
   /* Progress */
   function updateProgress() {
@@ -697,7 +737,7 @@ main { padding-bottom: 48px; }
     for (var i = 0; i < steps.length; i++) steps[i].setAttribute('data-done', flags[i] ? 'true' : 'false');
   }
 
-  renderReset(); renderQ1(); renderShield(); renderSim(); renderPledge(); updateProgress();
+  renderAll();
 
   /* Carousel */
   (function () {
@@ -754,6 +794,10 @@ main { padding-bottom: 48px; }
     });
     car.addEventListener('pointercancel', function () { x0 = null; });
 
+    onReset.push(function () {
+      playing = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+      label(); show(0); start();
+    });
     label(); show(0); start();
   })();
 })();
