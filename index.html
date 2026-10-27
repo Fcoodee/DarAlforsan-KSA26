@@ -232,6 +232,7 @@ section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 4.6vw, 2
 .sum-list li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 .sum-list li b { color: var(--accent); white-space: nowrap; }
 .sum-pledge { margin: 8px 0; font-weight: 700; line-height: 1.8; }
+.sum-close span { display: block; }
 .sum-close { margin: 10px 0 0; font-family: var(--font-display); font-weight: 800; color: var(--accent); }
 .sum-hint { margin: 6px 0 0; font-size: .85rem; color: var(--muted); }
 .brand-row { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 4vw, 32px); }
@@ -420,7 +421,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       </div>
 
       <div class="q" id="q1">
-        <p class="prompt">على من يقع واجب الدفاع عن العقيدة والمجتمع والوطن؟</p>
+        <p class="prompt" id="q1-prompt">على من يقع واجب الدفاع عن العقيدة والمجتمع والوطن؟</p>
         <div class="choices" id="q1-choices"></div>
         <div id="q1-feedback"></div>
       </div>
@@ -515,7 +516,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <h2>ملخص مشاركتك</h2>
       <ul class="sum-list" id="sum-list"></ul>
       <p class="sum-pledge" id="sum-pledge"></p>
-      <p class="sum-close">#السعودية_خط_أحمر</p>
+      <p class="sum-close"><span>#وطن_آمن</span><span>#كلنا_درع_الوطن</span></p>
       <p class="sum-hint">لبدء مشاركة جديدة اضغط «مشاركة جديدة» في أعلى الصفحة.</p>
     </section>
   </main>
@@ -528,14 +529,38 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 
   var AR = function (n) { return String(n).replace(/\d/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'[d]; }); };
 
-  var Q1 = {
-    options: ['القوات المسلحة وحدها', 'كل مواطن', 'الكبار فقط'],
-    correct: 1,
-    good: 'صحيح. الواجب يشمل كل مواطن، وتختلف صورة أدائه بحسب الاختصاص والأنظمة. للطالب دور حقيقي وإن اختلف عن دور غيره.',
-    bad: 'ليس تمامًا. نص المادة يجعل الواجب على كل مواطن، وليس على فئة واحدة. الذي يختلف هو صورة أدائه.'
-  };
+  var Q1BANK = [
+    {
+      prompt: 'على من يقع واجب الدفاع عن العقيدة والمجتمع والوطن؟',
+      opts: ['القوات المسلحة وحدها', 'كل مواطن', 'الكبار فقط'],
+      correct: 1,
+      good: 'صحيح. الواجب يشمل كل مواطن، وتختلف صورة أدائه بحسب الاختصاص والأنظمة. للطالب دور حقيقي وإن اختلف عن دور غيره.',
+      bad: 'ليس تمامًا. نص المادة يجعل الواجب على كل مواطن، وليس على فئة واحدة. الذي يختلف هو صورة أدائه.'
+    },
+    {
+      prompt: 'أي هذه التصرفات صورة مناسبة لحماية الوطن من طالب في المرحلة الابتدائية؟',
+      opts: ['أنتظر حتى أكبر ثم أبدأ', 'أتأكد من الخبر قبل أن أنقله لغيري', 'أنقل كل ما يصلني لأنني أحب وطني'],
+      correct: 1,
+      good: 'صحيح. حماية الوطن تبدأ بسلوك صغير نقدر عليه اليوم، ومنه التحقق قبل النقل.',
+      bad: 'ليس تمامًا. حب الوطن لا يعني نقل كل ما يصل، والانتظار حتى الكبر يضيّع دورًا نقدر عليه اليوم. الأنسب هو التحقق قبل النقل.'
+    },
+    {
+      prompt: 'ماذا يعني أن الواجب «على كل مواطن»؟',
+      opts: ['أن لكل فرد دورًا بحسب قدرته وعمره واختصاصه', 'أن الجميع يؤدون العمل نفسه بالطريقة نفسها', 'أن الواجب يسقط عن الصغار'],
+      correct: 0,
+      good: 'صحيح. الواجب عام، وصور أدائه تختلف باختلاف القدرة والعمر والاختصاص.',
+      bad: 'ليس تمامًا. الواجب يشمل الجميع، لكن صورة الأداء تختلف: فلكلٍّ دوره بحسب قدرته وعمره واختصاصه.'
+    },
+    {
+      prompt: 'من الذي يسهم في حفظ أمن المجتمع؟',
+      opts: ['الجهات المختصة وحدها', 'الجهات المختصة، ومعها وعي كل فرد وتعاونه', 'من يحمل السلاح فقط'],
+      correct: 1,
+      good: 'صحيح. للجهات المختصة دورها، ويقوّيها وعي الأفراد وتعاونهم والتزامهم بالأنظمة.',
+      bad: 'ليس تمامًا. الجهات المختصة أساس، لكن وعي كل فرد وتعاونه يكمل دورها، فالأمن مسؤولية مشتركة.'
+    }
+  ];
 
-  var SC = [
+  var SCBANK = [
     {
       src: 'رسالة مُحوَّلة · بلا مصدر',
       msg: 'عاجل: تعليق الدراسة غدًا في جميع المناطق. أرسلها لكل من تعرف قبل أن تُحذف!',
@@ -595,6 +620,185 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       correct: 1,
       good: 'الفخر لا يستدعي كشف المواقع أو التحركات أو المعدات. ما لا يخدم الأمان قد يخدم غيرنا، والجهات المختصة تقرّر ما يُنشر.',
       bad: 'الأنسب هو عدم النشر والإبلاغ. تغطية الوجوه لا تخفي المكان والوقت والمعدات، وهذه معلومات حساسة.'
+    },
+    {
+      src: 'رسالة · في مجموعة الصف',
+      msg: 'تحذير: مادة خطيرة في المقصف! انشروا الخبر لتحموا زملاءكم قبل فوات الأوان!',
+      opts: [
+        'أنشره فورًا لأحمي زملائي',
+        'أخبر معلمي أو إدارة المدرسة، ولا أنشره قبل أن يتأكدوا',
+        'أكتب في المجموعة أنني خائف'
+      ],
+      correct: 1,
+      good: 'الخوف يدفع إلى النشر السريع. الجهة المسؤولة في المدرسة هي من تتحقق وتعلن ما يلزم.',
+      bad: 'الأنسب هو إخبار المعلم أو الإدارة. النشر قبل التأكد يزرع الخوف حتى لو كانت النية حسنة.'
+    },
+    {
+      src: 'فيديو · متداول',
+      msg: 'فيديو يقول إن ما يحدث فيه جارٍ الآن، لكن لا يظهر فيه تاريخ ولا مكان.',
+      opts: [
+        'أرسله لأصدقائي ليعرفوا',
+        'أسأل شخصًا بالغًا، وأبحث عن الخبر في مصدر رسمي قبل أي مشاركة',
+        'أعلّق عليه بأنه مخيف'
+      ],
+      correct: 1,
+      good: 'مقاطع كثيرة قديمة أو من بلد آخر تُنسب إلى حدث جديد. غياب التاريخ والمكان علامة تستحق التوقف.',
+      bad: 'الأنسب هو التحقق من الخبر في مصدر رسمي وسؤال شخص بالغ. التعليق والمشاركة يزيدان انتشاره.'
+    },
+    {
+      src: 'إعلان · داخل لعبة',
+      msg: 'مجانًا! احصل على ١٠٠٠ جوهرة الآن. أدخل رقم بطاقة والدك لإتمام الطلب.',
+      opts: [
+        'أدخل الرقم لأحصل على الجواهر',
+        'لا أدخل أي رقم، وأخبر والدي',
+        'أدخل نصف الرقم فقط'
+      ],
+      correct: 1,
+      good: 'العروض المجانية التي تطلب بيانات مالية غالبًا احتيال. بيانات الأسرة أمانة لا تُدخل إلا بإذن وليّ الأمر.',
+      bad: 'الأنسب هو عدم إدخال أي رقم وإخبار وليّ الأمر. حتى جزء من الرقم قد يساعد المحتال.'
+    },
+    {
+      src: 'رسالة · من حساب جديد',
+      msg: 'أنا طالب في مدرسة أخرى. أرسل لي صورة بطاقتك وموقع بيتك لنكون أصدقاء.',
+      opts: [
+        'أرسلها لأنه يبدو لطيفًا',
+        'لا أشارك بياناتي، وأخبر وليّ أمري أو معلمي',
+        'أرسل صورة المدرسة فقط'
+      ],
+      correct: 1,
+      good: 'لا نعرف من يقف خلف الحساب. بياناتك وموقعك لا تُعطى لمن لم تتأكد منه، وإخبار شخص بالغ يحميك.',
+      bad: 'الأنسب هو عدم المشاركة وإخبار شخص بالغ. معلومات المدرسة قد تدل على مكانك أيضًا.'
+    },
+    {
+      src: 'منشور · من حساب مجهول',
+      msg: 'مرض خطير ينتشر في الحي! لا تخرجوا من بيوتكم وانشروا الخبر!',
+      opts: [
+        'أنشره وأخبر أصدقائي',
+        'أنتظر الإعلان من الجهة الصحية الرسمية قبل أي نشر',
+        'أنتظر دقائق ثم أنشره'
+      ],
+      correct: 1,
+      good: 'الأخبار الصحية يصدرها المختصون. نشر خبر غير موثوق قد يسبب الذعر ويؤخر وصول المعلومة الصحيحة.',
+      bad: 'الأنسب هو انتظار الجهة الصحية الرسمية. الانتظار دقائق لا يجعل الخبر موثوقًا.'
+    },
+    {
+      src: 'منشور · في وسائل التواصل',
+      msg: 'منشور يسخر من أهل منطقة معيّنة ويدعو الناس إلى مقاطعتهم.',
+      opts: [
+        'أعيد نشره لأنه طريف',
+        'لا أنشره ولا أشارك في السخرية، وأخبر معلمي',
+        'أضع له علامة إعجاب فقط'
+      ],
+      correct: 1,
+      good: 'الوطن يجمع أبناءه. السخرية من فئة أو منطقة تفرّق، والإعجاب نوع من المشاركة.',
+      bad: 'الأنسب هو عدم المشاركة وإخبار المعلم. حتى علامة الإعجاب تساعد المنشور على الانتشار.'
+    }
+  ];
+
+  var SIMBANK = [
+    {
+      kind: 'رابط في رسالة',
+      msg: 'وصلتك رسالة: «تم اختيارك لمنحة طلابية. سجّل بياناتك عبر الرابط».',
+      code: 'https://sa-gov.free-prize.top/claim',
+      opts: [
+        'يبدأ بـ https، إذن هو آمن',
+        'صاحب الموقع الحقيقي هو الجزء الذي يسبق نهاية الرابط (free-prize.top)، أما «sa-gov» فتمويه',
+        'كلمة gov تعني أنه موقع حكومي'
+      ],
+      correct: 1,
+      good: 'اقرأ النطاق من نهايته. المواقع الحكومية السعودية تنتهي عادةً بـ gov.sa. ثم افحص الرابط عبر «تحقق» قبل فتحه.',
+      bad: 'اقرأ النطاق من نهايته: صاحب الموقع هنا هو free-prize.top. قفل https لا يثبت أن الموقع صادق، وكلمة gov يمكن كتابتها في أي رابط.'
+    },
+    {
+      kind: 'رمز QR',
+      msg: 'ملصق QR على عمود في الشارع كُتب فوقه: «امسح لتحصل على وجبتك مجانًا». يبدو أنه ملصق فوق ملصق آخر.',
+      code: '',
+      opts: [
+        'الرمز مطبوع بجودة عالية، فهو موثوق',
+        'ملصق فوق ملصق آخر ووعد بمكافأة كبيرة، وهذه علامات تحذير',
+        'إن كان الوعد جميلًا فلا ضرر من المسح'
+      ],
+      correct: 1,
+      good: 'رمز QR يخفي الرابط، ويمكن لصق رمز آخر فوقه. لا تمسحه قبل فحصه عبر «تحقق»، وأخبر صاحب المكان.',
+      bad: 'الأنسب هو الانتباه لعلامات التحذير: ملصق مُلصق فوق غيره ووعد كبير. جودة الطباعة لا تثبت شيئًا، والمسح قد يفتح رابطًا ضارًا.'
+    },
+    {
+      kind: 'ملف في مجموعة',
+      msg: 'أرسل لك صديق في المجموعة ملفًا اسمه كما يلي، مع عبارة «افتحه بسرعة».',
+      code: 'homework_final.pdf.exe',
+      opts: [
+        'الاسم يحتوي pdf، إذن هو مستند',
+        'الامتداد الأخير exe يعني أنه برنامج وليس مستندًا، وهذه علامة تحذير',
+        'صديقي أرسله، إذن هو آمن'
+      ],
+      correct: 1,
+      good: 'الامتداد الأخير هو الذي يحدد نوع الملف. حساب صديق قد يكون مخترقًا. لا تفتح الملف، وأخبر معلمك أو وليّ أمرك ليفحصه بالغ عبر «تحقق للملفات».',
+      bad: 'الأنسب هو قراءة الامتداد الأخير: exe برنامج وليس مستندًا. وقد يكون حساب صديقك مخترقًا. لا تفتح الملف، وأخبر شخصًا بالغًا.'
+    },
+    {
+      kind: 'رابط في رسالة',
+      msg: 'وصلتك رسالة من «شركة توصيل»: طلبك معلّق، ادفع رسومًا صغيرة الآن.',
+      code: 'http://delivery-sa.pay-now.link/track',
+      opts: [
+        'الرابط يبدأ بـ delivery-sa، إذن هو لشركة سعودية',
+        'الاسم الحقيقي للموقع هو pay-now.link، والرسالة تطلب دفعًا مستعجلًا',
+        'لا خطر، فالرسوم صغيرة'
+      ],
+      correct: 1,
+      good: 'اقرأ النطاق من نهايته: صاحب الموقع هو pay-now.link. طلب الدفع المستعجل علامة تحذير. افحص الرابط عبر «تحقق» قبل فتحه.',
+      bad: 'الأنسب هو قراءة النطاق من نهايته: pay-now.link. ما يكتب في بداية الرابط تمويه، وصغر المبلغ لا يجعل الطلب موثوقًا.'
+    },
+    {
+      kind: 'رسالة نصية',
+      msg: 'رسالة تقول: حساب والدك سيُغلق خلال ساعة! اضغط الرابط وأدخل الرمز الذي وصلك.',
+      code: 'bit.ly/3xYz',
+      opts: [
+        'أضغط بسرعة، فالوقت ضيق',
+        'الرابط المختصر يخفي وجهته، والاستعجال علامة تحذير، فأعرض الرسالة على والدي',
+        'أرسل الرمز لأن الرسالة تعرف اسمي'
+      ],
+      correct: 1,
+      good: 'الرابط المختصر لا يكشف وجهته. والرمز الذي يصلك سرّ لا يُعطى لأحد، وتعرض الرسالة على شخص بالغ ليفحصها.',
+      bad: 'الأنسب هو الانتباه لعلامتين: رابط مختصر يخفي وجهته، واستعجال شديد. الرمز الذي يصلك لا يُرسل لأحد.'
+    },
+    {
+      kind: 'تطبيق',
+      msg: 'موقع يعرض لعبة مجانية، ويطلب تحميل ملف تثبيت من خارج المتجر الرسمي، ثم يطلب الوصول إلى الصور والرسائل.',
+      code: 'game-free.apk',
+      opts: [
+        'أحمّله، فكل الألعاب تطلب صلاحيات',
+        'التحميل من خارج المتجر الرسمي وطلب صلاحيات غير مبررة علامتان تحذيريتان، فأسأل شخصًا بالغًا',
+        'أحمّله ثم أحذفه إن لم يعجبني'
+      ],
+      correct: 1,
+      good: 'المتاجر الرسمية تفحص التطبيقات. ولعبة لا تحتاج إلى صورك ورسائلك. اسأل شخصًا بالغًا قبل أي تحميل.',
+      bad: 'الأنسب هو الحذر من علامتين: مصدر غير رسمي وصلاحيات لا تحتاجها اللعبة. الحذف بعد التحميل قد يكون متأخرًا.'
+    },
+    {
+      kind: 'بريد إلكتروني',
+      msg: 'وصل بريد باسم «البنك» إلى والدك يطلب منه الرد عليه بكلمة المرور.',
+      code: 'من: support@bank-secure.verify-now.net',
+      opts: [
+        'اسم البنك مكتوب، إذن البريد حقيقي',
+        'البنوك لا تطلب كلمة المرور بالرد على رسالة، والنطاق الحقيقي هو verify-now.net',
+        'يرسل نصف كلمة المرور فقط'
+      ],
+      correct: 1,
+      good: 'كلمة المرور لا تُرسل لأحد. والنطاق الحقيقي يُقرأ من نهايته، وقد يكتب المحتال اسم البنك في أي مكان.',
+      bad: 'الأنسب هو معرفة أن البنك لا يطلب كلمة المرور بالرسائل، وقراءة النطاق من نهايته. إرسال جزء منها يساعد المحتال.'
+    },
+    {
+      kind: 'ملف مضغوط',
+      msg: 'رسالة من رقم مجهول: نتائج الطلاب، افتح الملف المضغوط وأدخل كلمة المرور المرفقة.',
+      code: 'results.zip',
+      opts: [
+        'أفتحه فهو يخص النتائج',
+        'ملف من مجهول مضغوط بكلمة مرور يمنع فحصه، فلا أفتحه وأعطيه لشخص بالغ',
+        'أفتحه على جهاز آخر'
+      ],
+      correct: 1,
+      good: 'كلمة المرور على الملف تمنع برامج الحماية من فحصه. لا تفتح ملفًا من مجهول، وأعطه لشخص بالغ ليفحصه عبر «تحقق للملفات».',
+      bad: 'الأنسب هو عدم فتحه وإعطاؤه لشخص بالغ. تغيير الجهاز لا يزيل الخطر، وقد ينتقل إلى جهاز آخر.'
     }
   ];
 
@@ -606,12 +810,78 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     'أتأكد من موثوقية أي رابط أو رمز QR عبر خدمة «تحقق» (مع شخص بالغ) قبل فتحه'
   ];
 
-  var KEY = 'khat-ahmar-proto-v1';
-  var S = { q1: null, shield: {}, sim: {}, act: null };
+  var KEY = 'khat-ahmar-proto-v2';
+  var Q1 = null, SC = [], SIM = [];
+
+  /* Dealing: every participation gets its own questions (preferring ones not used last time)
+     and every option set is shuffled so the correct answer moves from question to question. */
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[k]; a[k] = t; }
+    return a;
+  }
+  function pickIds(size, n, avoid) {
+    var fresh = [], used = [];
+    for (var i = 0; i < size; i++) (avoid.indexOf(i) === -1 ? fresh : used).push(i);
+    return shuffle(fresh).concat(shuffle(used)).slice(0, n);
+  }
+  function targetSlots(n) {
+    var base = [], off = Math.floor(Math.random() * 3);
+    for (var i = 0; i < n; i++) base.push((i + off) % 3);
+    return shuffle(base);
+  }
+  function makePerm(item, slot) {
+    var others = shuffle([0, 1, 2].filter(function (x) { return x !== item.correct; }));
+    var perm = [], o = 0;
+    for (var d = 0; d < 3; d++) perm.push(d === slot ? item.correct : others[o++]);
+    return perm;
+  }
+  function deal(prev) {
+    prev = prev || {};
+    var q = pickIds(Q1BANK.length, 1, prev.q ? [prev.q.id] : [])[0];
+    var scIds = pickIds(SCBANK.length, 5, (prev.sc || []).map(function (x) { return x.id; }));
+    var simIds = pickIds(SIMBANK.length, 3, (prev.sim || []).map(function (x) { return x.id; }));
+    var scSlots = targetSlots(scIds.length), simSlots = targetSlots(simIds.length);
+    return {
+      q: { id: q, perm: makePerm(Q1BANK[q], Math.floor(Math.random() * 3)) },
+      sc: scIds.map(function (id, i) { return { id: id, perm: makePerm(SCBANK[id], scSlots[i]) }; }),
+      sim: simIds.map(function (id, i) { return { id: id, perm: makePerm(SIMBANK[id], simSlots[i]) }; })
+    };
+  }
+  function validPerm(p) { return Array.isArray(p) && p.length === 3 && [0, 1, 2].every(function (x) { return p.indexOf(x) !== -1; }); }
+  function validEntry(e, size) { return e && typeof e.id === 'number' && e.id >= 0 && e.id < size && validPerm(e.perm); }
+  function validDeck(d) {
+    return d && validEntry(d.q, Q1BANK.length) && Array.isArray(d.sc) && d.sc.length === 5 && d.sc.every(function (e) { return validEntry(e, SCBANK.length); }) &&
+      Array.isArray(d.sim) && d.sim.length === 3 && d.sim.every(function (e) { return validEntry(e, SIMBANK.length); });
+  }
+  function view(item, perm) {
+    var v = {};
+    for (var k in item) v[k] = item[k];
+    v.opts = perm.map(function (i) { return item.opts[i]; });
+    v.correct = perm.indexOf(item.correct);
+    return v;
+  }
+  function applyDeck() {
+    var d = S.deck;
+    Q1 = view(Q1BANK[d.q.id], d.q.perm);
+    SC = d.sc.map(function (e) { return view(SCBANK[e.id], e.perm); });
+    SIM = d.sim.map(function (e) { return view(SIMBANK[e.id], e.perm); });
+    var pr = document.getElementById('q1-prompt'); if (pr) pr.textContent = Q1.prompt;
+  }
+
+  var S = { q1: null, shield: {}, sim: {}, act: null, deck: null };
   try {
     var raw = localStorage.getItem(KEY);
-    if (raw) { var p = JSON.parse(raw); if (p && typeof p === 'object') { S.q1 = p.q1 == null ? null : p.q1; S.shield = p.shield || {}; S.sim = p.sim || {}; S.act = p.act == null ? null : p.act; } }
+    if (raw) {
+      var p = JSON.parse(raw);
+      if (p && typeof p === 'object' && validDeck(p.deck)) {
+        S.deck = p.deck;
+        S.q1 = p.q1 == null ? null : p.q1; S.shield = p.shield || {}; S.sim = p.sim || {}; S.act = p.act == null ? null : p.act;
+      }
+    }
   } catch (e) {}
+  if (!S.deck) S.deck = deal(null);
+  applyDeck();
   function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 
   function $(id) { return document.getElementById(id); }
@@ -621,7 +891,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   function renderQ1() {
     var box = $('q1-choices'); box.textContent = '';
     var answered = S.q1 !== null;
-    Q1.options.forEach(function (t, i) {
+    Q1.opts.forEach(function (t, i) {
       var b = el('button', 'choice', t); b.type = 'button'; b.disabled = answered;
       if (answered) {
         if (i === Q1.correct) b.classList.add('is-good');
@@ -695,48 +965,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   }
 
   /* Mission 3: training simulation (no data is sent anywhere) */
-  var SIM = [
-    {
-      kind: 'رابط في رسالة',
-      msg: 'وصلتك رسالة: «تم اختيارك لمنحة طلابية. سجّل بياناتك عبر الرابط».',
-      code: 'https://sa-gov.free-prize.top/claim',
-      opts: [
-        'يبدأ بـ https، إذن هو آمن',
-        'صاحب الموقع الحقيقي هو الجزء الذي يسبق نهاية الرابط (free-prize.top)، أما «sa-gov» فتمويه',
-        'كلمة gov تعني أنه موقع حكومي'
-      ],
-      correct: 1,
-      good: 'اقرأ النطاق من نهايته. المواقع الحكومية السعودية تنتهي عادةً بـ gov.sa. ثم افحص الرابط عبر «تحقق» قبل فتحه.',
-      bad: 'اقرأ النطاق من نهايته: صاحب الموقع هنا هو free-prize.top. قفل https لا يثبت أن الموقع صادق، وكلمة gov يمكن كتابتها في أي رابط.'
-    },
-    {
-      kind: 'رمز QR',
-      msg: 'ملصق QR على عمود في الشارع كُتب فوقه: «امسح لتحصل على وجبتك مجانًا». يبدو أنه ملصق فوق ملصق آخر.',
-      code: '',
-      opts: [
-        'الرمز مطبوع بجودة عالية، فهو موثوق',
-        'ملصق فوق ملصق آخر ووعد بمكافأة كبيرة، وهذه علامات تحذير',
-        'إن كان الوعد جميلًا فلا ضرر من المسح'
-      ],
-      correct: 1,
-      good: 'رمز QR يخفي الرابط، ويمكن لصق رمز آخر فوقه. لا تمسحه قبل فحصه عبر «تحقق»، وأخبر صاحب المكان.',
-      bad: 'الأنسب هو الانتباه لعلامات التحذير: ملصق مُلصق فوق غيره ووعد كبير. جودة الطباعة لا تثبت شيئًا، والمسح قد يفتح رابطًا ضارًا.'
-    },
-    {
-      kind: 'ملف في مجموعة',
-      msg: 'أرسل لك صديق في المجموعة ملفًا اسمه كما يلي، مع عبارة «افتحه بسرعة».',
-      code: 'homework_final.pdf.exe',
-      opts: [
-        'الاسم يحتوي pdf، إذن هو مستند',
-        'الامتداد الأخير exe يعني أنه برنامج وليس مستندًا، وهذه علامة تحذير',
-        'صديقي أرسله، إذن هو آمن'
-      ],
-      correct: 1,
-      good: 'الامتداد الأخير هو الذي يحدد نوع الملف. حساب صديق قد يكون مخترقًا. لا تفتح الملف، وأخبر معلمك أو وليّ أمرك ليفحصه بالغ عبر «تحقق للملفات».',
-      bad: 'الأنسب هو قراءة الامتداد الأخير: exe برنامج وليس مستندًا. وقد يكون حساب صديقك مخترقًا. لا تفتح الملف، وأخبر شخصًا بالغًا.'
-    }
-  ];
-
   function renderSim() {
     var host = $('sim'); host.textContent = '';
     SIM.forEach(function (s, idx) {
@@ -809,7 +1037,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   }
   function resetAll() {
     undoSnap = JSON.stringify(S);
-    S = { q1: null, shield: {}, sim: {}, act: null };
+    S = { q1: null, shield: {}, sim: {}, act: null, deck: deal(S.deck) };
+    applyDeck();
     save(); renderAll();
     for (var i = 0; i < onReset.length; i++) onReset[i]();
     try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
@@ -819,6 +1048,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   function undoReset() {
     if (!undoSnap) return;
     try { S = JSON.parse(undoSnap); } catch (e) { return; }
+    if (!validDeck(S.deck)) S.deck = deal(null);
+    applyDeck();
     undoSnap = null; save(); renderAll();
     showToast('أُعيدت اختيارات المشاركة السابقة.', false);
   }
