@@ -253,6 +253,40 @@ main > section::before { content: ""; position: absolute; inset: 0; z-index: -1;
   background: var(--emblem-line); opacity: var(--emblem-op);
   -webkit-mask: url("img/emblem-outline.png") center / auto min(320px, 80%) no-repeat;
           mask: url("img/emblem-outline.png") center / auto min(320px, 80%) no-repeat; }
+/* شعارات المبادرة */
+.shield-band { background: var(--surface); border-bottom: 4px solid var(--red); padding-block: 22px; text-align: center; }
+.shield-title { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem, 6vw, 2.4rem); color: var(--accent); text-shadow: 0 0 8px var(--neon-glow), 0 0 18px var(--neon-glow); }
+.nos { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 16px; }
+.no { border: 2px solid var(--red); border-radius: 14px; padding: 12px 14px; background: var(--bad-soft); }
+.no .x { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--red); color: #fff; font-weight: 800; font-size: 1.1rem; }
+.no b { display: block; margin-top: 6px; font-family: var(--font-display); font-size: 1.25rem; }
+.no small { display: block; margin-top: 2px; color: var(--muted); line-height: 1.7; }
+.shield-note { margin: 14px 0 0; font-weight: 700; line-height: 1.8; }
+/* مهمة ٥: نموذج الكلمة */
+.me-form { display: grid; gap: 8px; margin-top: 14px; max-width: 40em; }
+.me-form label { font-weight: 700; margin-top: 6px; }
+.me-form input, .me-form select, .me-form textarea { font: inherit; font-size: 1rem; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 44px; width: 100%; box-sizing: border-box; }
+.me-form textarea { resize: vertical; line-height: 1.8; }
+.me-form input:focus, .me-form select:focus, .me-form textarea:focus { outline: none; border-color: var(--neon); box-shadow: 0 0 0 1px var(--neon), 0 0 12px var(--neon-glow); }
+.me-count { text-align: end; font-size: .8rem; color: var(--muted); }
+.me-privacy { margin: 0; font-size: .9rem; color: var(--muted); }
+.me-error { margin: 0; padding: 8px 12px; border: 1px solid var(--bad); background: var(--bad-soft); border-radius: 8px; font-weight: 600; }
+.me-submit { justify-self: start; min-height: 44px; padding: 0 22px; border-radius: 999px; border: 2px solid var(--accent); background: var(--accent); color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.me-saved { margin-top: 14px; padding: 12px 14px; border: 1px solid var(--good); background: var(--good-soft); border-radius: 10px; }
+.me-saved p { margin: 0; font-weight: 600; }
+/* الشريط المتحرك */
+.ticker { margin-top: 12px; overflow: hidden; border: 1px solid var(--accent); border-radius: 12px; background: var(--surface); padding: 10px 0; direction: rtl; }
+.ticker-track { display: flex; width: max-content; animation: tk-move 48s linear infinite; }
+.ticker:hover .ticker-track, .ticker.is-paused .ticker-track { animation-play-state: paused; }
+@keyframes tk-move { from { transform: translateX(0); } to { transform: translateX(50%); } }
+.tk-item { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; padding-inline: 22px; border-inline-start: 1px solid var(--line); }
+.tk-item b { color: var(--accent); }
+.tk-item small { color: var(--muted); }
+.tk-item.mine { background: var(--accent-soft); border-radius: 8px; box-shadow: 0 0 10px var(--neon-glow); }
+.sum-dua { margin: 10px 0 0; font-weight: 600; line-height: 1.9; }
+.foot { text-align: center; padding: 28px 16px 44px; color: var(--muted); }
+.foot-line { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; color: var(--accent); }
+.foot-dua { margin: 6px 0 0; line-height: 1.9; }
 .gal-title { margin: 0 0 10px; text-align: center; font-family: var(--font-display); color: var(--accent); text-shadow: 0 0 8px var(--neon-glow); }
 .motion-note { margin: 8px 0 0; font-size: .85rem; color: var(--muted); line-height: 1.8; }
 .c-pause[aria-pressed="true"] { background: var(--neon); border-color: var(--neon); color: #04230F; font-weight: 700; }
@@ -318,7 +352,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @media (min-width: 700px) {
   body { font-size: 19px; }
   .wrap { max-width: 960px; }
-  .progress { grid-template-columns: repeat(4, 1fr); }
+  .progress { grid-template-columns: repeat(5, 1fr); }
   .verbs { grid-template-columns: repeat(4, 1fr); }
   .svcs { grid-template-columns: repeat(3, 1fr); }
   .carousel { height: clamp(420px, 62vh, 640px); height: clamp(420px, 62dvh, 640px); }
@@ -348,6 +382,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @media (prefers-reduced-motion: reduce) {
   .slide, .slide.is-active, .choice { transition: none; }
   .flag { animation: none; opacity: 1; right: 0; }
+  .ticker-track { animation: none; flex-wrap: wrap; width: auto; }
+  .tk-item.dup, #ticker-toggle { display: none; }
+  .tk-item { white-space: normal; padding-block: 4px; }
   .verb b { animation: none; }
 }
 </style>
@@ -388,16 +425,29 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     </div>
   </header>
 
+  <section class="shield-band" aria-label="شعارات المبادرة">
+    <div class="wrap">
+      <h2 class="shield-title">أنتم حماة الوطن</h2>
+      <div class="nos">
+        <div class="no"><span class="x" aria-hidden="true">✕</span><b>لا تُصوِّر</b><small>ما يمس الأمن: المواقع والمعدات والتحركات</small></div>
+        <div class="no"><span class="x" aria-hidden="true">✕</span><b>لا تَنشر</b><small>قبل أن تتحقق من المصدر الرسمي</small></div>
+        <div class="no"><span class="x" aria-hidden="true">✕</span><b>لا تكتب ما يضرّ الوطن</b><small>وأخبر معلمك بما يقلقك</small></div>
+      </div>
+      <p class="shield-note">لا تستهِن بأي شيء تنشره، فقد يضرّ الوطن وأنت لا تدري.</p>
+    </div>
+  </section>
+
   <main class="wrap">
     <div class="progress" id="progress" aria-label="تقدمك في المهام">
-      <div class="step" data-step="1" data-done="false"><small>المهمة ١ من ٤</small><b>أفهم الواجب</b></div>
-      <div class="step" data-step="2" data-done="false"><small>المهمة ٢ من ٤</small><b>أصدّ الشائعة</b></div>
-      <div class="step" data-step="3" data-done="false"><small>المهمة ٣ من ٤</small><b>أتحقق قبل أن أفتح</b></div>
-      <div class="step" data-step="4" data-done="false"><small>المهمة ٤ من ٤</small><b>ألتزم بفعل</b></div>
+      <div class="step" data-step="1" data-done="false"><small>المهمة ١ من ٥</small><b>أفهم الواجب</b></div>
+      <div class="step" data-step="2" data-done="false"><small>المهمة ٢ من ٥</small><b>أصدّ الشائعة</b></div>
+      <div class="step" data-step="3" data-done="false"><small>المهمة ٣ من ٥</small><b>أتحقق قبل أن أفتح</b></div>
+      <div class="step" data-step="4" data-done="false"><small>المهمة ٤ من ٥</small><b>ألتزم بفعل</b></div>
+      <div class="step" data-step="5" data-done="false"><small>المهمة ٥ من ٥</small><b>كلمتي للوطن</b></div>
     </div>
 
     <section id="m1">
-      <p class="mission-label">المهمة ١ من ٤</p>
+      <p class="mission-label">المهمة ١ من ٥</p>
       <h2>أفهم الواجب</h2>
       <p class="intro">النظام الأساسي للحكم يجعل الدفاع مسؤولية مشتركة. اقرأ المادة ثم أجب عن سؤال واحد.</p>
 
@@ -458,7 +508,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     </section>
 
     <section id="m2">
-      <p class="mission-label">المهمة ٢ من ٤</p>
+      <p class="mission-label">المهمة ٢ من ٥</p>
       <h2>أصدّ الشائعة</h2>
       <p class="intro">خمسة مواقف يمرّ بها الطلبة كل أسبوع. اختر التصرف الأنسب في كل موقف.</p>
       <div id="shield"></div>
@@ -466,7 +516,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     </section>
 
     <section id="m3">
-      <p class="mission-label">المهمة ٣ من ٤</p>
+      <p class="mission-label">المهمة ٣ من ٥</p>
       <h2>أتحقق قبل أن أفتح</h2>
       <div class="callout">قبل التعامل مع الروابط ورموز الاستجابة السريعة (QR) والملفات، تأكد من موثوقيتها عبر خدمة «تحقق»، و<a href="https://x.com/hashtag/%D9%84%D8%A7_%D8%AA%D9%81%D8%AA%D8%AD_%D9%85%D8%AC%D8%A7%D9%84?src=hashtag_click" target="_blank" rel="noopener">#لا_تفتح_مجال</a> للمتصيدين.</div>
 
@@ -505,10 +555,37 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     </section>
 
     <section id="m4">
-      <p class="mission-label">المهمة ٤ من ٤</p>
+      <p class="mission-label">المهمة ٤ من ٥</p>
       <h2>ألتزم بفعل</h2>
       <p class="intro">الانتماء يظهر في السلوك. اختر فعلًا واحدًا تلتزم به.</p>
       <div class="acts" id="acts" role="radiogroup" aria-label="الفعل الذي ألتزم به"></div>
+    </section>
+
+    <section id="m5">
+      <p class="mission-label">المهمة ٥ من ٥</p>
+      <h2>كلمتي للوطن</h2>
+      <p class="intro">اكتب كلمة قصيرة تدافع بها عن وطنك. هذه معاينة افتراضية: لا تُرسل كلمتك لأحد ولا تُنشر.</p>
+      <form class="me-form" id="me-form" novalidate>
+        <label for="me-name">اسم الطالب</label>
+        <input id="me-name" type="text" maxlength="30" autocomplete="off" placeholder="الاسم الأول وأول حرف من اسم الأسرة">
+        <label for="me-grade">الصف</label>
+        <select id="me-grade">
+          <option value="">اختر الصف</option>
+          <option>الصف الرابع الابتدائي</option>
+          <option>الصف الخامس الابتدائي</option>
+          <option>الصف السادس الابتدائي</option>
+        </select>
+        <label for="me-word">كلمة دافع عن وطنك</label>
+        <textarea id="me-word" rows="4" maxlength="160" placeholder="اكتب كلمتك هنا"></textarea>
+        <div class="me-count" id="me-count" aria-hidden="true">٠ / ١٦٠</div>
+        <p class="me-privacy">لا تكتب اسمك الكامل، ولا رقم جوال، ولا عنوانًا، ولا رابطًا.</p>
+        <p class="me-error" id="me-error" role="alert" hidden></p>
+        <button class="me-submit" type="submit">أضف كلمتي</button>
+      </form>
+      <div class="me-saved" id="me-saved" hidden>
+        <p>أُضيفت كلمتك للمعاينة، وتجدها في شريط الملخص أدناه.</p>
+        <button type="button" class="link-btn" id="me-edit">تعديل كلمتي</button>
+      </div>
     </section>
 
     <section id="summary" class="summary" hidden aria-live="polite">
@@ -516,10 +593,20 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <h2>ملخص مشاركتك</h2>
       <ul class="sum-list" id="sum-list"></ul>
       <p class="sum-pledge" id="sum-pledge"></p>
+      <div class="ticker" id="ticker" role="group" aria-label="شريط كلمات الطلاب (معاينة افتراضية)">
+        <div class="ticker-track" id="ticker-track"></div>
+      </div>
+      <button type="button" class="link-btn" id="ticker-toggle">إيقاف الشريط</button>
+      <p class="fineprint">معاينة افتراضية: الكلمات الأخرى في الشريط نماذج تجريبية، ولا تُرسل كلمتك لأحد.</p>
+      <p class="sum-dua">اللهم احفظ بلادنا من كل شر، وأدم علينا نعمة الأمن والأمان.</p>
       <p class="sum-close"><span>#وطن_آمن</span><span>#كلنا_درع_الوطن</span></p>
       <p class="sum-hint">لبدء مشاركة جديدة اضغط «مشاركة جديدة» في أعلى الصفحة.</p>
     </section>
   </main>
+  <footer class="foot">
+    <p class="foot-line">أمن الوطن واجب علينا جميعًا</p>
+    <p class="foot-dua">اللهم احفظ بلادنا من كل شر، وأدم علينا نعمة الأمن والأمان.</p>
+  </footer>
 </div>
 
 <script>
@@ -848,6 +935,29 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       sim: simIds.map(function (id, i) { return { id: id, perm: makePerm(SIMBANK[id], simSlots[i]) }; })
     };
   }
+  /* Mission 5: validation (kept strict because the participant is a child) */
+  var GRADES = ['الصف الرابع الابتدائي', 'الصف الخامس الابتدائي', 'الصف السادس الابتدائي'];
+  var DIGITS = /[0-9٠-٩]/;
+  function checkMe(name, grade, word) {
+    name = (name || '').trim(); word = (word || '').trim();
+    var words = name.split(/\s+/).filter(Boolean);
+    if (name.length < 2) return 'اكتب اسمك (الاسم الأول وأول حرف من اسم الأسرة).';
+    if (name.length > 30 || words.length > 3) return 'اكتب الاسم الأول وأول حرف من اسم الأسرة فقط، دون اسمك الكامل.';
+    if (DIGITS.test(name) || /[@:\/]/.test(name)) return 'لا تكتب أرقامًا أو رموزًا في الاسم.';
+    if (GRADES.indexOf(grade) === -1) return 'اختر صفك من القائمة.';
+    if (word.length < 10) return 'اكتب كلمة أطول قليلًا (١٠ أحرف على الأقل).';
+    if (word.length > 160) return 'الكلمة أطول من ١٦٠ حرفًا.';
+    if (/(https?:|www\.|@|\.com|\.sa\b|\.net|\.org)/i.test(word)) return 'لا تكتب رابطًا أو بريدًا في كلمتك.';
+    if (/[0-9٠-٩]{7,}/.test(word.replace(/[\s\-]/g, ''))) return 'لا تكتب أرقام جوال أو أرقامًا طويلة.';
+    return '';
+  }
+  var SAMPLES = [
+    { name: 'نورة ع.', grade: GRADES[0], word: 'وطني أمانة في عنقي، أحميه بوعيي وصدقي.' },
+    { name: 'سلمان ا.', grade: GRADES[1], word: 'لن أنقل خبرًا قبل أن أتحقق من مصدره.' },
+    { name: 'ريماس م.', grade: GRADES[2], word: 'السعودية خط أحمر، وأنا أحرسها بوعيي.' },
+    { name: 'يزيد ح.', grade: GRADES[0], word: 'أحب بلادي وأدعو لها بالأمن والأمان.' }
+  ];
+  function validMe(m) { return !!m && typeof m.name === 'string' && typeof m.word === 'string' && GRADES.indexOf(m.grade) !== -1 && !checkMe(m.name, m.grade, m.word); }
   function validPerm(p) { return Array.isArray(p) && p.length === 3 && [0, 1, 2].every(function (x) { return p.indexOf(x) !== -1; }); }
   function validEntry(e, size) { return e && typeof e.id === 'number' && e.id >= 0 && e.id < size && validPerm(e.perm); }
   function validDeck(d) {
@@ -869,7 +979,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     var pr = document.getElementById('q1-prompt'); if (pr) pr.textContent = Q1.prompt;
   }
 
-  var S = { q1: null, shield: {}, sim: {}, act: null, deck: null };
+  var S = { q1: null, shield: {}, sim: {}, act: null, deck: null, me: null };
   try {
     var raw = localStorage.getItem(KEY);
     if (raw) {
@@ -877,6 +987,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       if (p && typeof p === 'object' && validDeck(p.deck)) {
         S.deck = p.deck;
         S.q1 = p.q1 == null ? null : p.q1; S.shield = p.shield || {}; S.sim = p.sim || {}; S.act = p.act == null ? null : p.act;
+        S.me = validMe(p.me) ? p.me : null;
       }
     }
   } catch (e) {}
@@ -1023,10 +1134,60 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     });
   }
 
+  /* Mission 5 */
+  function renderMe() {
+    var form = $('me-form'), saved = $('me-saved'); if (!form) return;
+    var has = !!S.me;
+    form.hidden = has; saved.hidden = !has;
+    if (!has) { $('me-error').hidden = true; if (!form.dataset.keep) { $('me-name').value = ''; $('me-grade').value = ''; $('me-word').value = ''; } form.dataset.keep = ''; updateCount(); }
+  }
+  function updateCount() { var n = $('me-word').value.length; $('me-count').textContent = AR(n) + ' / ' + AR(160); }
+  var tickerKey = '';
+  function renderTicker() {
+    var track = $('ticker-track'); if (!track || !S.me) return;
+    track.textContent = '';
+    var items = [{ name: S.me.name, grade: S.me.grade, word: S.me.word, mine: true }].concat(SAMPLES);
+    for (var copy = 0; copy < 2; copy++) {
+      items.forEach(function (it) {
+        var n = el('span', 'tk-item' + (it.mine ? ' mine' : '') + (copy ? ' dup' : ''));
+        if (copy) n.setAttribute('aria-hidden', 'true');
+        n.appendChild(el('b', null, it.name.trim()));
+        n.appendChild(el('small', null, it.grade));
+        n.appendChild(el('span', null, '«' + it.word.trim() + '»'));
+        track.appendChild(n);
+      });
+    }
+    track.style.animationDuration = Math.max(36, items.length * 12) + 's';
+  }
+  (function () {
+    var form = $('me-form'); if (!form) return;
+    $('me-word').addEventListener('input', updateCount);
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = $('me-name').value, grade = $('me-grade').value, word = $('me-word').value;
+      var err = checkMe(name, grade, word), box = $('me-error');
+      if (err) { box.textContent = err; box.hidden = false; return; }
+      box.hidden = true;
+      S.me = { name: name.trim(), grade: grade, word: word.trim() };
+      save(); renderMe(); updateProgress();
+    });
+    $('me-edit').addEventListener('click', function () {
+      var m = S.me; S.me = null; save();
+      form.dataset.keep = '1'; renderMe();
+      if (m) { $('me-name').value = m.name; $('me-grade').value = m.grade; $('me-word').value = m.word; updateCount(); }
+      updateProgress();
+    });
+    var tg = $('ticker-toggle');
+    tg.addEventListener('click', function () {
+      var t = $('ticker'), paused = t.classList.toggle('is-paused');
+      tg.textContent = paused ? 'تشغيل الشريط' : 'إيقاف الشريط';
+    });
+  })();
+
   /* Reset for the next student: one tap clears every choice, with a short undo */
   var onReset = [];
   var undoSnap = null, toastTimer = null;
-  function renderAll() { renderQ1(); renderShield(); renderSim(); renderPledge(); updateProgress(); }
+  function renderAll() { renderQ1(); renderShield(); renderSim(); renderPledge(); renderMe(); updateProgress(); }
   function showToast(text, withUndo) {
     var t = $('toast');
     $('toast-text').textContent = text;
@@ -1037,7 +1198,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   }
   function resetAll() {
     undoSnap = JSON.stringify(S);
-    S = { q1: null, shield: {}, sim: {}, act: null, deck: deal(S.deck) };
+    S = { q1: null, shield: {}, sim: {}, act: null, deck: deal(S.deck), me: null };
     applyDeck();
     save(); renderAll();
     for (var i = 0; i < onReset.length; i++) onReset[i]();
@@ -1062,7 +1223,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     var d2 = Object.keys(S.shield).length === SC.length;
     var d3 = Object.keys(S.sim).length === SIM.length;
     var d4 = S.act !== null;
-    var flags = [d1, d2, d3, d4];
+    var d5 = !!S.me;
+    var flags = [d1, d2, d3, d4, d5];
     var steps = document.querySelectorAll('#progress .step');
     for (var i = 0; i < steps.length; i++) steps[i].setAttribute('data-done', flags[i] ? 'true' : 'false');
     renderSummary();
@@ -1072,7 +1234,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   function renderSummary() {
     var box = $('summary'); if (!box) return;
     var complete = S.q1 !== null && Object.keys(S.shield).length === SC.length &&
-      Object.keys(S.sim).length === SIM.length && S.act !== null;
+      Object.keys(S.sim).length === SIM.length && S.act !== null && !!S.me;
     var wasHidden = box.hidden;
     box.hidden = !complete;
     if (!complete) return;
@@ -1087,6 +1249,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     var list = $('sum-list'); list.textContent = '';
     rows.forEach(function (r) { var li = el('li'); li.appendChild(el('span', null, r[0])); li.appendChild(el('b', null, r[1])); list.appendChild(li); });
     $('sum-pledge').textContent = 'التزامي: ' + ACTS[S.act];
+    var tk = JSON.stringify(S.me); if (tk !== tickerKey) { tickerKey = tk; renderTicker(); }
     if (wasHidden) { try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {} }
   }
 
