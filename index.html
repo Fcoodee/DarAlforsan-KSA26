@@ -282,6 +282,7 @@ main > section::before { content: ""; position: absolute; inset: 0; z-index: -1;
 .tk-item { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; padding-inline: 22px; border-inline-start: 1px solid var(--line); }
 .tk-item b { color: var(--accent); }
 .tk-item small { color: var(--muted); }
+.tk-item.pending small::after { content: " · قيد المراجعة"; color: var(--red); font-weight: 700; }
 .tk-item.mine { background: var(--accent-soft); border-radius: 8px; box-shadow: 0 0 10px var(--neon-glow); }
 .sum-dua { margin: 10px 0 0; font-weight: 600; line-height: 1.9; }
 .foot { text-align: center; padding: 28px 16px 44px; color: var(--muted); }
@@ -564,13 +565,15 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     <section id="m5">
       <p class="mission-label">المهمة ٥ من ٥</p>
       <h2>كلمتي للوطن</h2>
-      <p class="intro">اكتب كلمة قصيرة تدافع بها عن وطنك. هذه معاينة افتراضية: لا تُرسل كلمتك لأحد ولا تُنشر.</p>
+      <p class="intro" id="me-intro">اكتب كلمة قصيرة تدافع بها عن وطنك. هذه معاينة افتراضية: لا تُرسل كلمتك لأحد ولا تُنشر.</p>
       <form class="me-form" id="me-form" novalidate>
+        <input id="me-website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;inset-inline-start:-9999px;width:1px;height:1px;opacity:0">
         <label for="me-name">اسم الطالب</label>
         <input id="me-name" type="text" maxlength="30" autocomplete="off" placeholder="الاسم الأول وأول حرف من اسم الأسرة">
         <label for="me-grade">الصف</label>
         <select id="me-grade">
           <option value="">اختر الصف</option>
+          <option>الصف الثالث الابتدائي</option>
           <option>الصف الرابع الابتدائي</option>
           <option>الصف الخامس الابتدائي</option>
           <option>الصف السادس الابتدائي</option>
@@ -579,10 +582,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
         <textarea id="me-word" rows="4" maxlength="160" placeholder="اكتب كلمتك هنا"></textarea>
         <div class="me-count" id="me-count" aria-hidden="true">٠ / ١٦٠</div>
         <p class="me-error" id="me-error" role="alert" hidden></p>
-        <button class="me-submit" type="submit">أضف كلمتي</button>
+        <button class="me-submit" id="me-submit" type="submit">أضف كلمتي</button>
       </form>
       <div class="me-saved" id="me-saved" hidden>
-        <p>أُضيفت كلمتك للمعاينة، وتجدها في شريط الملخص أدناه.</p>
+        <p id="me-saved-text">أُضيفت كلمتك للمعاينة، وتجدها في شريط الملخص أدناه.</p>
         <button type="button" class="link-btn" id="me-edit">تعديل كلمتي</button>
       </div>
     </section>
@@ -596,7 +599,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
         <div class="ticker-track" id="ticker-track"></div>
       </div>
       <button type="button" class="link-btn" id="ticker-toggle">إيقاف الشريط</button>
-      <p class="fineprint">معاينة افتراضية: الكلمات الأخرى في الشريط نماذج تجريبية، ولا تُرسل كلمتك لأحد.</p>
+      <p class="fineprint" id="ticker-note">معاينة افتراضية: الكلمات الأخرى في الشريط نماذج تجريبية، ولا تُرسل كلمتك لأحد.</p>
       <p class="sum-dua">اللهم احفظ بلادنا من كل شر، وأدم علينا نعمة الأمن والأمان.</p>
       <p class="sum-close"><span>#وطن_آمن</span><span>#كلنا_درع_الوطن</span></p>
       <p class="sum-hint">لبدء مشاركة جديدة اضغط «مشاركة جديدة» في أعلى الصفحة.</p>
@@ -935,7 +938,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     };
   }
   /* Mission 5: validation (kept strict because the participant is a child) */
-  var GRADES = ['الصف الرابع الابتدائي', 'الصف الخامس الابتدائي', 'الصف السادس الابتدائي'];
+  /* رابط تطبيق الويب (Google Apps Script) بعد نشره. اتركه فارغًا للمعاينة المحلية دون إرسال. */
+  var ENDPOINT = '';
+  var GRADES = ['الصف الثالث الابتدائي', 'الصف الرابع الابتدائي', 'الصف الخامس الابتدائي', 'الصف السادس الابتدائي'];
   var DIGITS = /[0-9٠-٩]/;
   function checkMe(name, grade, word) {
     name = (name || '').trim(); word = (word || '').trim();
@@ -943,6 +948,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     if (name.length < 2) return 'اكتب اسمك (الاسم الأول وأول حرف من اسم الأسرة).';
     if (name.length > 30 || words.length > 3) return 'اكتب الاسم الأول وأول حرف من اسم الأسرة فقط، دون اسمك الكامل.';
     if (DIGITS.test(name) || /[@:\/]/.test(name)) return 'لا تكتب أرقامًا أو رموزًا في الاسم.';
+    if (/^[=+\-@]/.test(name) || /^[=+\-@]/.test(word)) return 'لا تبدأ الاسم أو الكلمة برمز.';
     if (GRADES.indexOf(grade) === -1) return 'اختر صفك من القائمة.';
     if (word.length < 10) return 'اكتب كلمة أطول قليلًا (١٠ أحرف على الأقل).';
     if (word.length > 160) return 'الكلمة أطول من ١٦٠ حرفًا.';
@@ -951,9 +957,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     return '';
   }
   var SAMPLES = [
-    { name: 'نورة ع.', grade: GRADES[0], word: 'وطني أمانة في عنقي، أحميه بوعيي وصدقي.' },
-    { name: 'سلمان ا.', grade: GRADES[1], word: 'لن أنقل خبرًا قبل أن أتحقق من مصدره.' },
-    { name: 'ريماس م.', grade: GRADES[2], word: 'السعودية خط أحمر، وأنا أحرسها بوعيي.' },
+    { name: 'نورة ع.', grade: GRADES[1], word: 'وطني أمانة في عنقي، أحميه بوعيي وصدقي.' },
+    { name: 'سلمان ا.', grade: GRADES[2], word: 'لن أنقل خبرًا قبل أن أتحقق من مصدره.' },
+    { name: 'ريماس م.', grade: GRADES[3], word: 'السعودية خط أحمر، وأنا أحرسها بوعيي.' },
     { name: 'يزيد ح.', grade: GRADES[0], word: 'أحب بلادي وأدعو لها بالأمن والأمان.' }
   ];
   function validMe(m) { return !!m && typeof m.name === 'string' && typeof m.word === 'string' && GRADES.indexOf(m.grade) !== -1 && !checkMe(m.name, m.grade, m.word); }
@@ -1138,17 +1144,51 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     var form = $('me-form'), saved = $('me-saved'); if (!form) return;
     var has = !!S.me;
     form.hidden = has; saved.hidden = !has;
+    var sent = has && S.me.sent;
+    $('me-edit').hidden = !!sent;
+    $('me-saved-text').textContent = sent
+      ? 'أُرسلت كلمتك إلى وكيل المرحلة الابتدائية للمراجعة، وتظهر في الشريط بعد قبولها.'
+      : 'أُضيفت كلمتك للمعاينة، وتجدها في شريط الملخص أدناه.';
+    $('me-intro').textContent = ENDPOINT
+      ? 'اكتب كلمة قصيرة تدافع بها عن وطنك. تُرسل إلى وكيل المرحلة الابتدائية لمراجعتها، ولا تُعرض في الشريط إلا بعد قبولها.'
+      : 'اكتب كلمة قصيرة تدافع بها عن وطنك. هذه معاينة افتراضية: لا تُرسل كلمتك لأحد ولا تُنشر.';
     if (!has) { $('me-error').hidden = true; if (!form.dataset.keep) { $('me-name').value = ''; $('me-grade').value = ''; $('me-word').value = ''; } form.dataset.keep = ''; updateCount(); }
   }
   function updateCount() { var n = $('me-word').value.length; $('me-count').textContent = AR(n) + ' / ' + AR(160); }
+
+  /* Google Sheet bridge (Apps Script web app): send a word, and read the approved ones */
+  var approved = null;
+  function sendMe(me) {
+    if (typeof fetch !== 'function') return Promise.reject(new Error('nofetch'));
+    return fetch(ENDPOINT, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ name: me.name, grade: me.grade, word: me.word, website: '' }) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (!j || !j.ok) throw new Error((j && j.error) || 'fail'); return j; });
+  }
+  function loadApproved() {
+    if (!ENDPOINT || typeof fetch !== 'function') return;
+    fetch(ENDPOINT + (ENDPOINT.indexOf('?') === -1 ? '?' : '&') + 'action=list', { redirect: 'follow' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j || !j.ok || !Array.isArray(j.items)) return;
+        approved = j.items.filter(function (it) { return it && typeof it.name === 'string' && typeof it.word === 'string' && GRADES.indexOf(it.grade) !== -1; }).slice(0, 40);
+        tickerKey = ''; renderSummary();
+      })
+      .catch(function () {});
+  }
   var tickerKey = '';
   function renderTicker() {
     var track = $('ticker-track'); if (!track || !S.me) return;
     track.textContent = '';
-    var items = [{ name: S.me.name, grade: S.me.grade, word: S.me.word, mine: true }].concat(SAMPLES);
+    var mine = { name: S.me.name, grade: S.me.grade, word: S.me.word, mine: true, pending: !!S.me.sent };
+    var others = ENDPOINT ? (approved || []) : SAMPLES;
+    var items = [mine].concat(others);
+    $('ticker-note').textContent = ENDPOINT
+      ? 'تُعرض هنا الكلمات التي قبلها وكيل المرحلة الابتدائية. تظهر كلمتك للجميع بعد مراجعتها وقبولها.'
+      : 'معاينة افتراضية: الكلمات الأخرى في الشريط نماذج تجريبية، ولا تُرسل كلمتك لأحد.';
     for (var copy = 0; copy < 2; copy++) {
       items.forEach(function (it) {
-        var n = el('span', 'tk-item' + (it.mine ? ' mine' : '') + (copy ? ' dup' : ''));
+        var n = el('span', 'tk-item' + (it.mine ? ' mine' : '') + (it.pending ? ' pending' : '') + (copy ? ' dup' : ''));
         if (copy) n.setAttribute('aria-hidden', 'true');
         n.appendChild(el('b', null, it.name.trim()));
         n.appendChild(el('small', null, it.grade));
@@ -1167,8 +1207,12 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       var err = checkMe(name, grade, word), box = $('me-error');
       if (err) { box.textContent = err; box.hidden = false; return; }
       box.hidden = true;
-      S.me = { name: name.trim(), grade: grade, word: word.trim() };
-      save(); renderMe(); updateProgress();
+      var me = { name: name.trim(), grade: grade, word: word.trim(), sent: false };
+      function done(sent) { me.sent = sent; S.me = me; save(); renderMe(); updateProgress(); }
+      if (!ENDPOINT || $('me-website').value) { done(!!ENDPOINT); return; }   // preview mode, or a bot filled the hidden field
+      var btn = $('me-submit'); btn.disabled = true; btn.textContent = 'جارٍ الإرسال…';
+      sendMe(me).then(function () { btn.disabled = false; btn.textContent = 'أضف كلمتي'; done(true); })
+        .catch(function () { btn.disabled = false; btn.textContent = 'أضف كلمتي'; box.textContent = 'تعذّر إرسال كلمتك الآن. تحقق من الاتصال وحاول مرة أخرى.'; box.hidden = false; });
     });
     $('me-edit').addEventListener('click', function () {
       var m = S.me; S.me = null; save();
@@ -1253,6 +1297,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   }
 
   renderAll();
+  loadApproved();
 
   /* Carousel */
   (function () {
