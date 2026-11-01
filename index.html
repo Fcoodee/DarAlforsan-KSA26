@@ -1180,8 +1180,11 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   function renderTicker() {
     var track = $('ticker-track'); if (!track || !S.me) return;
     track.textContent = '';
-    var mine = { name: S.me.name, grade: S.me.grade, word: S.me.word, mine: true, pending: !!S.me.sent };
     var others = ENDPOINT ? (approved || []) : SAMPLES;
+    var same = function (it) { return it.name === S.me.name && it.grade === S.me.grade && it.word === S.me.word; };
+    var isApproved = !!S.me.sent && others.some(same);   // the reviewer accepted my word: show it once, without the pending tag
+    if (isApproved) others = others.filter(function (it) { return !same(it); });
+    var mine = { name: S.me.name, grade: S.me.grade, word: S.me.word, mine: true, pending: !!S.me.sent && !isApproved };
     var items = [mine].concat(others);
     $('ticker-note').textContent = ENDPOINT
       ? 'تُعرض هنا الكلمات التي قبلها وكيل المرحلة الابتدائية. تظهر كلمتك للجميع بعد مراجعتها وقبولها.'
