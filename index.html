@@ -390,7 +390,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   .choice.is-bad { border-style: dashed; border-width: 3px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .slide, .slide.is-active, .choice { transition: none; }
+  .choice { transition: none; }
   .flag { animation: none; opacity: 1; right: 0; }
   .verb b { animation: none; }
 }
@@ -1379,7 +1379,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     var slides = car.querySelectorAll('.slide');
     var dotsBox = $('c-dots'), count = $('c-count'), pauseBtn = $('c-pause');
     var cur = 0, timer = null, held = false;
-    var playing = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var playing = true;   // the gallery always auto-plays; the pause button stays available
     var dots = [];
 
     for (var d = 0; d < slides.length; d++) {
@@ -1433,7 +1433,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     car.addEventListener('pointercancel', function () { x0 = null; });
 
     onReset.push(function () {
-      playing = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+      playing = true;
       label(); show(0); start();
     });
     label(); show(0); start();
