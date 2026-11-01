@@ -392,9 +392,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @media (prefers-reduced-motion: reduce) {
   .slide, .slide.is-active, .choice { transition: none; }
   .flag { animation: none; opacity: 1; right: 0; }
-  .ticker:not(.is-playing) .ticker-track { animation: none; flex-wrap: wrap; width: auto; }
-  .ticker:not(.is-playing) .tk-item.dup { display: none; }
-  .ticker:not(.is-playing) .tk-item { white-space: normal; padding-block: 4px; }
   .verb b { animation: none; }
 }
 </style>
@@ -1287,11 +1284,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       updateProgress();
     });
     var tg = $('ticker-toggle'), t = $('ticker');
-    var rm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    if (rm) tg.textContent = 'تشغيل حركة الشريط';
+    // The ticker always moves, whatever the device's motion setting; the pause button stays available.
     tg.addEventListener('click', function () {
-      if (rm) { var on = t.classList.toggle('is-playing'); tg.textContent = on ? 'إيقاف حركة الشريط' : 'تشغيل حركة الشريط'; }
-      else { var paused = t.classList.toggle('is-paused'); tg.textContent = paused ? 'تشغيل الشريط' : 'إيقاف الشريط'; }
+      var paused = t.classList.toggle('is-paused'); tg.textContent = paused ? 'تشغيل الشريط' : 'إيقاف الشريط';
     });
     $('aa-close').addEventListener('click', function () { alertClosed = true; renderTop(); });
     var rb = $('aa-refresh');
