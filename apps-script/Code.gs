@@ -13,6 +13,9 @@ var HEADERS = ['التاريخ', 'الرقم', 'اسم الطالب', 'الصف'
 var COL = { DATE: 1, ID: 2, NAME: 3, GRADE: 4, WORD: 5, STATUS: 6, NOTE: 7 };
 var STATUS = { NEW: 'جديدة', OK: 'مقبولة', NO: 'مرفوضة' };
 var GRADES = ['الصف الثالث الابتدائي', 'الصف الرابع الابتدائي', 'الصف الخامس الابتدائي', 'الصف السادس الابتدائي'];
+/* اختياري: بريد المراجع لإرسال تنبيه عند وصول مشاركة جديدة. اتركه فارغًا لتعطيل البريد.
+   عند تعبئته يطلب Google صلاحية إرسال البريد مرة واحدة عند إعادة النشر. */
+var REVIEWER_EMAIL = '';
 var MAX_PER_MINUTE = 20;   // سقف الإرسال العام في الدقيقة (حماية من الإغراق)
 var LIST_LIMIT = 40;       // أقصى عدد كلمات مقبولة تُعرض في الشريط
 
@@ -102,6 +105,7 @@ function doPost(e) {
     var range = sh.getRange(row, 1, 1, HEADERS.length);
     range.setNumberFormat('@');
     range.setValues([[new Date().toISOString(), id, name, grade, word, STATUS.NEW, '']]);
+    notify_(name, grade);
     return json_({ ok: true, id: id });
   } catch (err2) {
     return json_({ ok: false, error: 'server' });
@@ -113,6 +117,7 @@ function doPost(e) {
 /* ---------- قراءة الكلمات المقبولة فقط ---------- */
 function doGet(e) {
   var action = (e && e.parameter && e.parameter.action) || 'list';
+  if (action === 'pending') return json_({ ok: true, count: countPending_() });   // عدد فقط، بلا أي محتوى
   if (action !== 'list') return json_({ ok: false, error: 'unknown_action' });
   var cache = CacheService.getScriptCache();
   var hit = cache.get('approved');
@@ -134,6 +139,22 @@ function doGet(e) {
 }
 
 /* ---------- أدوات ---------- */
+function countPending_() {
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  if (!sh || sh.getLastRow() < 2) return 0;
+  var vals = sh.getRange(2, COL.STATUS, sh.getLastRow() - 1, 1).getValues();
+  var n = 0;
+  for (var i = 0; i < vals.length; i++) if (String(vals[i][0]).trim() === STATUS.NEW) n++;
+  return n;
+}
+function notify_(name, grade) {
+  if (!REVIEWER_EMAIL) return;
+  try {
+    MailApp.sendEmail(REVIEWER_EMAIL, 'مشاركة جديدة بانتظار المراجعة',
+      'وصلت مشاركة جديدة من ' + name + ' (' + grade + ').\nعدد المشاركات بانتظار المراجعة: ' + countPending_() +
+      '\nافتح ورقة «' + SHEET_NAME + '» وغيّر الحالة إلى «مقبولة» أو «مرفوضة».');
+  } catch (x) {}
+}
 function json_(obj) { return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON); }
 function clean_(v) { return String(v == null ? '' : v).replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim(); }
 function rateOk_() {

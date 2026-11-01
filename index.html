@@ -275,8 +275,15 @@ main > section::before { content: ""; position: absolute; inset: 0; z-index: -1;
 .me-saved { margin-top: 14px; padding: 12px 14px; border: 1px solid var(--good); background: var(--good-soft); border-radius: 10px; }
 .me-saved p { margin: 0; font-weight: 600; }
 /* الشريط المتحرك */
-.ticker { margin-top: 12px; overflow: hidden; border: 1px solid var(--accent); border-radius: 12px; background: var(--surface); padding: 10px 0; direction: rtl; }
-.ticker-track { display: flex; width: max-content; animation: tk-move 48s linear infinite; }
+.ticker-wrap { margin-top: 14px; text-align: start; }
+.ticker { overflow: hidden; border: 2px solid var(--accent); border-radius: 14px; background: var(--surface); padding: 16px 0; direction: rtl; font-size: 1.2rem; box-shadow: 0 0 14px var(--neon-glow);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.agent-alert { background: #FFF3CD; color: #3D2B00; border-bottom: 3px solid #E0A800; padding-block: 10px; }
+.agent-alert .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.aa-tag { background: #B02A37; color: #fff; border-radius: 999px; padding: 2px 12px; font-weight: 800; font-size: .85rem; }
+.aa-text { margin: 0; flex: 1; min-width: 240px; line-height: 1.8; }
+.agent-alert .link-btn { color: #3D2B00; margin: 0; padding: 6px 0; }
+.ticker-track { display: flex; width: max-content; animation: tk-move 40s linear infinite; }
 .ticker:hover .ticker-track, .ticker.is-paused .ticker-track { animation-play-state: paused; }
 @keyframes tk-move { from { transform: translateX(0); } to { transform: translateX(50%); } }
 .tk-item { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; padding-inline: 22px; border-inline-start: 1px solid var(--line); }
@@ -383,9 +390,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @media (prefers-reduced-motion: reduce) {
   .slide, .slide.is-active, .choice { transition: none; }
   .flag { animation: none; opacity: 1; right: 0; }
-  .ticker-track { animation: none; flex-wrap: wrap; width: auto; }
-  .tk-item.dup, #ticker-toggle { display: none; }
-  .tk-item { white-space: normal; padding-block: 4px; }
+  .ticker:not(.is-playing) .ticker-track { animation: none; flex-wrap: wrap; width: auto; }
+  .ticker:not(.is-playing) .tk-item.dup { display: none; }
+  .ticker:not(.is-playing) .tk-item { white-space: normal; padding-block: 4px; }
   .verb b { animation: none; }
 }
 </style>
@@ -402,6 +409,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   </div>
   <div class="toast" id="toast" hidden aria-live="polite">
     <div class="toast-box"><span id="toast-text"></span><button type="button" id="toast-undo">تراجع</button></div>
+  </div>
+  <div class="agent-alert" id="agent-alert" hidden role="status" aria-live="polite">
+    <div class="wrap">
+      <span class="aa-tag">تنبيه للوكيل</span>
+      <p class="aa-text"><b>أ. محمد بن ناصر آل عامر، وكيل المرحلة الابتدائية:</b> <span id="aa-count">وصلت مشاركة جديدة</span> بانتظار المراجعة. يرجى مراجعتها والموافقة عليها أو رفضها من جدول المشاركات.</p>
+      <button type="button" class="link-btn" id="aa-close">إخفاء</button>
+    </div>
   </div>
   <div class="brand-band">
     <div class="wrap brand-row"><img class="brand-logo" src="img/daf.png" alt="شعار مدارس دار الفرسان: نفكر، نتأمل، نتعلم"><img class="brand-flag" src="img/flag-pole.png" alt="علم المملكة العربية السعودية"></div>
@@ -429,6 +443,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   <section class="shield-band" aria-label="شعارات المبادرة">
     <div class="wrap">
       <h2 class="shield-title">أنتم حماة الوطن</h2>
+      <div class="ticker-wrap" id="ticker-wrap" hidden>
+        <div class="ticker" id="ticker" role="group" aria-label="شريط كلمات الطلاب">
+          <div class="ticker-track" id="ticker-track"></div>
+        </div>
+        <button type="button" class="link-btn" id="ticker-toggle">إيقاف الشريط</button>
+        <p class="fineprint" id="ticker-note"></p>
+      </div>
       <div class="nos">
         <div class="no"><span class="x" aria-hidden="true">✕</span><b>لا تُصوِّر</b><small>ما يمس الأمن: المواقع والمعدات والتحركات</small></div>
         <div class="no"><span class="x" aria-hidden="true">✕</span><b>لا تَنشر</b><small>قبل أن تتحقق من المصدر الرسمي</small></div>
@@ -569,7 +590,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <form class="me-form" id="me-form" novalidate>
         <input id="me-website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;inset-inline-start:-9999px;width:1px;height:1px;opacity:0">
         <label for="me-name">اسم الطالب</label>
-        <input id="me-name" type="text" maxlength="30" autocomplete="off" placeholder="الاسم الأول وأول حرف من اسم الأسرة">
+        <input id="me-name" type="text" maxlength="30" autocomplete="off" placeholder="اسم الطالب">
         <label for="me-grade">الصف</label>
         <select id="me-grade">
           <option value="">اختر الصف</option>
@@ -595,11 +616,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <h2>ملخص مشاركتك</h2>
       <ul class="sum-list" id="sum-list"></ul>
       <p class="sum-pledge" id="sum-pledge"></p>
-      <div class="ticker" id="ticker" role="group" aria-label="شريط كلمات الطلاب (معاينة افتراضية)">
-        <div class="ticker-track" id="ticker-track"></div>
-      </div>
-      <button type="button" class="link-btn" id="ticker-toggle">إيقاف الشريط</button>
-      <p class="fineprint" id="ticker-note">معاينة افتراضية: الكلمات الأخرى في الشريط نماذج تجريبية، ولا تُرسل كلمتك لأحد.</p>
       <p class="sum-dua">اللهم احفظ بلادنا من كل شر، وأدم علينا نعمة الأمن والأمان.</p>
       <p class="sum-close"><span>#وطن_آمن</span><span>#كلنا_درع_الوطن</span></p>
       <p class="sum-hint">لبدء مشاركة جديدة اضغط «مشاركة جديدة» في أعلى الصفحة.</p>
@@ -945,8 +961,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   function checkMe(name, grade, word) {
     name = (name || '').trim(); word = (word || '').trim();
     var words = name.split(/\s+/).filter(Boolean);
-    if (name.length < 2) return 'اكتب اسمك (الاسم الأول وأول حرف من اسم الأسرة).';
-    if (name.length > 30 || words.length > 3) return 'اكتب الاسم الأول وأول حرف من اسم الأسرة فقط، دون اسمك الكامل.';
+    if (name.length < 2) return 'اكتب اسم الطالب.';
+    if (name.length > 30 || words.length > 3) return 'الاسم طويل، اكتبه حتى ثلاث كلمات.';
     if (DIGITS.test(name) || /[@:\/]/.test(name)) return 'لا تكتب أرقامًا أو رموزًا في الاسم.';
     if (/^[=+\-@]/.test(name) || /^[=+\-@]/.test(word)) return 'لا تبدأ الاسم أو الكلمة برمز.';
     if (GRADES.indexOf(grade) === -1) return 'اختر صفك من القائمة.';
@@ -1147,8 +1163,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     var sent = has && S.me.sent;
     $('me-edit').hidden = !!sent;
     $('me-saved-text').textContent = sent
-      ? 'أُرسلت كلمتك إلى وكيل المرحلة الابتدائية للمراجعة، وتظهر في الشريط بعد قبولها.'
-      : 'أُضيفت كلمتك للمعاينة، وتجدها في شريط الملخص أدناه.';
+      ? 'أُرسلت كلمتك إلى وكيل المرحلة الابتدائية للمراجعة. تجدها في الشريط أعلى الصفحة، وتظهر للجميع بعد قبولها.'
+      : 'أُضيفت كلمتك للمعاينة، وتجدها في الشريط أعلى الصفحة.';
     $('me-intro').textContent = ENDPOINT
       ? 'اكتب كلمة قصيرة تدافع بها عن وطنك. تُرسل إلى وكيل المرحلة الابتدائية لمراجعتها، ولا تُعرض في الشريط إلا بعد قبولها.'
       : 'اكتب كلمة قصيرة تدافع بها عن وطنك. هذه معاينة افتراضية: لا تُرسل كلمتك لأحد ولا تُنشر.';
@@ -1172,11 +1188,35 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       .then(function (j) {
         if (!j || !j.ok || !Array.isArray(j.items)) return;
         approved = j.items.filter(function (it) { return it && typeof it.name === 'string' && typeof it.word === 'string' && GRADES.indexOf(it.grade) !== -1; }).slice(0, 40);
-        tickerKey = ''; renderSummary();
+        tickerKey = ''; renderTop();
       })
       .catch(function () {});
   }
-  var tickerKey = '';
+  var tickerKey = '', pendingCount = null, alertClosed = false;
+  function countText(n) {
+    if (typeof n !== 'number' || n < 1) return 'وصلت مشاركة جديدة';
+    if (n === 1) return 'وصلت مشاركة جديدة واحدة';
+    if (n === 2) return 'وصلت مشاركتان جديدتان';
+    return 'وصلت ' + AR(n) + (n <= 10 ? ' مشاركات جديدة' : ' مشاركة جديدة');
+  }
+  function loadPending() {
+    if (!ENDPOINT || typeof fetch !== 'function') return;
+    fetch(ENDPOINT + (ENDPOINT.indexOf('?') === -1 ? '?' : '&') + 'action=pending', { redirect: 'follow' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (j && j.ok && typeof j.count === 'number') { pendingCount = j.count; renderTop(); } })
+      .catch(function () {});
+  }
+  /* Top of the page: agent alert + moving ticker, both appear once a word has been sent */
+  function renderTop() {
+    var wrap = $('ticker-wrap'), al = $('agent-alert'); if (!wrap || !al) return;
+    var has = !!S.me;
+    wrap.hidden = !has;
+    var showAlert = has && !!S.me.sent && !alertClosed && (pendingCount === null || pendingCount > 0);
+    al.hidden = !showAlert;
+    if (showAlert) $('aa-count').textContent = countText(pendingCount);
+    if (!has) { tickerKey = ''; return; }
+    var tk = JSON.stringify(S.me); if (tk !== tickerKey) { tickerKey = tk; renderTicker(); }
+  }
   function renderTicker() {
     var track = $('ticker-track'); if (!track || !S.me) return;
     track.textContent = '';
@@ -1211,7 +1251,11 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       if (err) { box.textContent = err; box.hidden = false; return; }
       box.hidden = true;
       var me = { name: name.trim(), grade: grade, word: word.trim(), sent: false };
-      function done(sent) { me.sent = sent; S.me = me; save(); renderMe(); updateProgress(); }
+      function done(sent) {
+        me.sent = sent; S.me = me; save(); renderMe(); updateProgress();
+        if (sent) { alertClosed = false; pendingCount = null; loadPending(); }
+        try { window.scrollTo({ top: 0, behavior: (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth' }); } catch (e) {}
+      }
       if (!ENDPOINT || $('me-website').value) { done(!!ENDPOINT); return; }   // preview mode, or a bot filled the hidden field
       var btn = $('me-submit'); btn.disabled = true; btn.textContent = 'جارٍ الإرسال…';
       sendMe(me).then(function () { btn.disabled = false; btn.textContent = 'أضف كلمتي'; done(true); })
@@ -1223,11 +1267,14 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       if (m) { $('me-name').value = m.name; $('me-grade').value = m.grade; $('me-word').value = m.word; updateCount(); }
       updateProgress();
     });
-    var tg = $('ticker-toggle');
+    var tg = $('ticker-toggle'), t = $('ticker');
+    var rm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (rm) tg.textContent = 'تشغيل حركة الشريط';
     tg.addEventListener('click', function () {
-      var t = $('ticker'), paused = t.classList.toggle('is-paused');
-      tg.textContent = paused ? 'تشغيل الشريط' : 'إيقاف الشريط';
+      if (rm) { var on = t.classList.toggle('is-playing'); tg.textContent = on ? 'إيقاف حركة الشريط' : 'تشغيل حركة الشريط'; }
+      else { var paused = t.classList.toggle('is-paused'); tg.textContent = paused ? 'تشغيل الشريط' : 'إيقاف الشريط'; }
     });
+    $('aa-close').addEventListener('click', function () { alertClosed = true; renderTop(); });
   })();
 
   /* Reset for the next student: one tap clears every choice, with a short undo */
@@ -1274,6 +1321,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     var steps = document.querySelectorAll('#progress .step');
     for (var i = 0; i < steps.length; i++) steps[i].setAttribute('data-done', flags[i] ? 'true' : 'false');
     renderSummary();
+    renderTop();
   }
 
   /* Closing summary: appears once every mission has an answer */
@@ -1295,12 +1343,12 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     var list = $('sum-list'); list.textContent = '';
     rows.forEach(function (r) { var li = el('li'); li.appendChild(el('span', null, r[0])); li.appendChild(el('b', null, r[1])); list.appendChild(li); });
     $('sum-pledge').textContent = 'التزامي: ' + ACTS[S.act];
-    var tk = JSON.stringify(S.me); if (tk !== tickerKey) { tickerKey = tk; renderTicker(); }
     if (wasHidden) { try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {} }
   }
 
   renderAll();
   loadApproved();
+  if (S.me && S.me.sent) loadPending();
 
   /* Carousel */
   (function () {
