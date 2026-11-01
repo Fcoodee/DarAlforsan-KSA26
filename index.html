@@ -1220,18 +1220,25 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   function renderTicker() {
     var track = $('ticker-track'); if (!track || !S.me) return;
     track.textContent = '';
-    var others = ENDPOINT ? (approved || []) : SAMPLES;
-    var same = function (it) { return it.name === S.me.name && it.grade === S.me.grade && it.word === S.me.word; };
-    var isApproved = !!S.me.sent && others.some(same);   // the reviewer accepted my word: show it once, without the pending tag
-    if (isApproved) others = others.filter(function (it) { return !same(it); });
-    var mine = { name: S.me.name, grade: S.me.grade, word: S.me.word, mine: true, pending: !!S.me.sent && !isApproved };
-    var items = [mine].concat(others);
+    var same = function (it) { return S.me && it.name === S.me.name && it.grade === S.me.grade && it.word === S.me.word; };
+    var items;
+    if (ENDPOINT) {
+      // Live mode: the ticker shows ONLY words the reviewer accepted. A word that is still under review is never shown, not even to its author.
+      items = (approved || []).map(function (it) { return { name: it.name, grade: it.grade, word: it.word, mine: !!S.me.sent && same(it) }; });
+    } else {
+      // Local preview: no review step exists, so the author's word and sample words are shown
+      items = [{ name: S.me.name, grade: S.me.grade, word: S.me.word, mine: true }].concat(SAMPLES);
+    }
+    var hasItems = items.length > 0;
+    $('ticker').hidden = !hasItems; $('ticker-toggle').hidden = !hasItems;
     $('ticker-note').textContent = ENDPOINT
-      ? 'تُعرض هنا الكلمات التي قبلها وكيل المرحلة الابتدائية. تظهر كلمتك للجميع بعد مراجعتها وقبولها.'
+      ? (hasItems
+          ? 'تُعرض هنا الكلمات التي وافق عليها وكيل المرحلة الابتدائية فقط. تظهر كلمتك بعد مراجعتها والموافقة عليها.'
+          : 'أُرسلت كلمتك للمراجعة، وتظهر في هذا الشريط بعد موافقة وكيل المرحلة الابتدائية عليها.')
       : 'معاينة افتراضية: الكلمات الأخرى في الشريط نماذج تجريبية، ولا تُرسل كلمتك لأحد.';
     for (var copy = 0; copy < 2; copy++) {
       items.forEach(function (it) {
-        var n = el('span', 'tk-item' + (it.mine ? ' mine' : '') + (it.pending ? ' pending' : '') + (copy ? ' dup' : ''));
+        var n = el('span', 'tk-item' + (it.mine ? ' mine' : '') + (copy ? ' dup' : ''));
         if (copy) n.setAttribute('aria-hidden', 'true');
         n.appendChild(el('b', null, it.name.trim()));
         n.appendChild(el('small', null, it.grade));
