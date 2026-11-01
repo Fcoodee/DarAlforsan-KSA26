@@ -8,6 +8,7 @@
  */
 
 var SHEET_NAME = 'المشاركات';
+var STATS_NAME = 'الإحصائيات';
 var HEADERS = ['التاريخ', 'الرقم', 'اسم الطالب', 'الصف', 'الكلمة', 'الحالة', 'ملاحظة المراجع'];
 var COL = { DATE: 1, ID: 2, NAME: 3, GRADE: 4, WORD: 5, STATUS: 6, NOTE: 7 };
 var STATUS = { NEW: 'جديدة', OK: 'مقبولة', NO: 'مرفوضة' };
@@ -33,7 +34,36 @@ function setup() {
     SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo(STATUS.NO).setBackground('#FADBD8').setRanges([sh.getRange(2, COL.STATUS, sh.getMaxRows() - 1, 1)]).build()
   ];
   sh.setConditionalFormatRules(cf);
+  setupStats_(ss);
   ss.toast('تم الإعداد. انشر السكربت كتطبيق ويب ثم ضع الرابط في الصفحة.', 'المبادرة', 8);
+}
+
+/* ---------- ورقة الإحصائيات: تُحسب تلقائيًا من ورقة المشاركات ---------- */
+function setupStats_(ss) {
+  var st = ss.getSheetByName(STATS_NAME) || ss.insertSheet(STATS_NAME);
+  st.clear(); st.setRightToLeft(true);
+  var head = ['الصف', 'كل المشاركات', 'مقبولة', 'قيد المراجعة', 'مرفوضة', 'عدد طلاب الصف (أدخله)', 'نسبة المشاركة'];
+  st.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight('bold').setBackground('#0B3D28').setFontColor('#FFFFFF').setWrap(true);
+  var q = "'" + SHEET_NAME + "'!";
+  for (var i = 0; i < GRADES.length; i++) {
+    var r = i + 2;
+    st.getRange(r, 1).setValue(GRADES[i]);
+    st.getRange(r, 2).setFormula('=COUNTIF(' + q + '$D:$D,$A' + r + ')');
+    st.getRange(r, 3).setFormula('=COUNTIFS(' + q + '$D:$D,$A' + r + ',' + q + '$F:$F,"' + STATUS.OK + '")');
+    st.getRange(r, 4).setFormula('=COUNTIFS(' + q + '$D:$D,$A' + r + ',' + q + '$F:$F,"' + STATUS.NEW + '")');
+    st.getRange(r, 5).setFormula('=COUNTIFS(' + q + '$D:$D,$A' + r + ',' + q + '$F:$F,"' + STATUS.NO + '")');
+    st.getRange(r, 7).setFormula('=IF(N(F' + r + ')>0,(B' + r + '-E' + r + ')/F' + r + ',"—")').setNumberFormat('0.0%');
+  }
+  var t = GRADES.length + 2;
+  st.getRange(t, 1).setValue('المجموع').setFontWeight('bold');
+  for (var c = 2; c <= 6; c++) {
+    var col = String.fromCharCode(64 + c);
+    st.getRange(t, c).setFormula('=SUM(' + col + '2:' + col + (t - 1) + ')').setFontWeight('bold');
+  }
+  st.getRange(t, 7).setFormula('=IF(N(F' + t + ')>0,(B' + t + '-E' + t + ')/F' + t + ',"—")').setNumberFormat('0.0%').setFontWeight('bold');
+  st.getRange(2, 6, GRADES.length, 1).setBackground('#FFF8DC');
+  st.getRange(t + 2, 1).setValue('ملاحظة: النسبة = (كل المشاركات − المرفوضة) ÷ عدد طلاب الصف. تحسب مشاركات لا طلابًا، فإن أرسل الطالب أكثر من مرة تتضخم النسبة. أدخل عدد الطلاب في الخلايا الملوّنة.');
+  st.setColumnWidth(1, 190); st.setColumnWidths(2, 6, 120); st.setFrozenRows(1);
 }
 
 /* ---------- قائمة للمراجع داخل الشيت ---------- */
