@@ -282,6 +282,8 @@ main > section::before { content: ""; position: absolute; inset: 0; z-index: -1;
 .agent-alert .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .aa-tag { background: #B02A37; color: #fff; border-radius: 999px; padding: 2px 12px; font-weight: 800; font-size: .85rem; }
 .aa-text { margin: 0; flex: 1; min-width: 240px; line-height: 1.8; }
+.aa-refresh { min-height: 40px; padding: 0 16px; border-radius: 999px; border: 2px solid #3D2B00; background: #fff; color: #3D2B00; font: inherit; font-weight: 700; cursor: pointer; }
+.aa-refresh:disabled { opacity: .6; cursor: progress; }
 .agent-alert .link-btn { color: #3D2B00; margin: 0; padding: 6px 0; }
 .ticker-track { display: flex; width: max-content; animation: tk-move 40s linear infinite; }
 .ticker:hover .ticker-track, .ticker.is-paused .ticker-track { animation-play-state: paused; }
@@ -414,6 +416,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     <div class="wrap">
       <span class="aa-tag">تنبيه للوكيل</span>
       <p class="aa-text"><b>أ. محمد بن ناصر آل عامر، وكيل المرحلة الابتدائية:</b> <span id="aa-count">وصلت مشاركة جديدة</span> بانتظار المراجعة. يرجى مراجعتها والموافقة عليها أو رفضها من جدول المشاركات.</p>
+      <button type="button" class="aa-refresh" id="aa-refresh">تحديث المشاركات</button>
       <button type="button" class="link-btn" id="aa-close">إخفاء</button>
     </div>
   </div>
@@ -1182,15 +1185,17 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       .then(function (j) { if (!j || !j.ok) throw new Error((j && j.error) || 'fail'); return j; });
   }
   function loadApproved() {
-    if (!ENDPOINT || typeof fetch !== 'function') return;
-    fetch(ENDPOINT + (ENDPOINT.indexOf('?') === -1 ? '?' : '&') + 'action=list', { redirect: 'follow' })
+    if (!ENDPOINT || typeof fetch !== 'function') return Promise.resolve(false);
+    return fetch(ENDPOINT + (ENDPOINT.indexOf('?') === -1 ? '?' : '&') + 'action=list', { redirect: 'follow' })
       .then(function (r) { return r.json(); })
       .then(function (j) {
-        if (!j || !j.ok || !Array.isArray(j.items)) return;
-        approved = j.items.filter(function (it) { return it && typeof it.name === 'string' && typeof it.word === 'string' && GRADES.indexOf(it.grade) !== -1; }).slice(0, 40);
-        tickerKey = ''; renderTop();
+        if (!j || !j.ok || !Array.isArray(j.items)) return false;
+        var next = j.items.filter(function (it) { return it && typeof it.name === 'string' && typeof it.word === 'string' && GRADES.indexOf(it.grade) !== -1; }).slice(0, 40);
+        // re-render only when the list changed, so the moving ticker is not restarted every minute
+        if (JSON.stringify(next) !== JSON.stringify(approved)) { approved = next; tickerKey = ''; renderTop(); }
+        return true;
       })
-      .catch(function () {});
+      .catch(function () { return false; });
   }
   var tickerKey = '', pendingCount = null, alertClosed = false;
   function countText(n) {
@@ -1200,11 +1205,14 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     return 'وصلت ' + AR(n) + (n <= 10 ? ' مشاركات جديدة' : ' مشاركة جديدة');
   }
   function loadPending() {
-    if (!ENDPOINT || typeof fetch !== 'function') return;
-    fetch(ENDPOINT + (ENDPOINT.indexOf('?') === -1 ? '?' : '&') + 'action=pending', { redirect: 'follow' })
+    if (!ENDPOINT || typeof fetch !== 'function') return Promise.resolve(false);
+    return fetch(ENDPOINT + (ENDPOINT.indexOf('?') === -1 ? '?' : '&') + 'action=pending', { redirect: 'follow' })
       .then(function (r) { return r.json(); })
-      .then(function (j) { if (j && j.ok && typeof j.count === 'number') { pendingCount = j.count; renderTop(); } })
-      .catch(function () {});
+      .then(function (j) { if (j && j.ok && typeof j.count === 'number') { pendingCount = j.count; renderTop(); return true; } return false; })
+      .catch(function () { return false; });
+  }
+  function refreshAll() {
+    return Promise.all([loadApproved(), (S.me && S.me.sent) ? loadPending() : Promise.resolve(true)]).then(function (r) { return r[0] && r[1]; });
   }
   /* Top of the page: agent alert + moving ticker, both appear once a word has been sent */
   function renderTop() {
@@ -1282,6 +1290,14 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       else { var paused = t.classList.toggle('is-paused'); tg.textContent = paused ? 'تشغيل الشريط' : 'إيقاف الشريط'; }
     });
     $('aa-close').addEventListener('click', function () { alertClosed = true; renderTop(); });
+    var rb = $('aa-refresh');
+    rb.addEventListener('click', function () {
+      rb.disabled = true; rb.textContent = 'جارٍ التحديث…';
+      refreshAll().then(function (ok) {
+        rb.disabled = false; rb.textContent = ok ? 'تم التحديث ✓' : 'تعذّر التحديث';
+        setTimeout(function () { rb.textContent = 'تحديث المشاركات'; }, 2500);
+      });
+    });
   })();
 
   /* Reset for the next student: one tap clears every choice, with a short undo */
@@ -1354,8 +1370,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   }
 
   renderAll();
-  loadApproved();
-  if (S.me && S.me.sent) loadPending();
+  refreshAll();
+  setInterval(function () { if (!document.hidden) refreshAll(); }, 60000);   // auto-refresh every minute while the page is visible
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshAll(); });
 
   /* Carousel */
   (function () {
