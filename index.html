@@ -1,4 +1,15 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0B3D28"><style>:root{color-scheme:light}html{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><title>السعودية خط أحمر</title>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0B3D28"><style>:root{color-scheme:light}html{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Poem player: one persistent <audio>, never re-rendered by reset/refresh */
+.poem{margin:22px auto 0;max-width:34em;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(242,247,243,.3);text-align:start}
+.poem-title{font-weight:800;font-size:1rem;text-align:center}
+.poem-row{display:flex;align-items:center;gap:10px;margin-top:8px}
+.poem-btn{flex:none;min-width:44px;min-height:44px;padding:0 16px;border-radius:999px;border:0;background:var(--neon);color:#062014;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 0 14px var(--neon-glow)}
+.poem-btn:focus-visible,.poem-stop:focus-visible,.poem-seek:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.poem-stop{flex:none;min-height:44px;padding:0 12px;border-radius:999px;border:1px solid rgba(242,247,243,.5);background:none;color:var(--hero-fg);font:inherit;cursor:pointer}
+.poem-seek{flex:1;min-width:0;height:44px;accent-color:var(--neon);direction:ltr}
+.poem-time{flex:none;font-variant-numeric:tabular-nums;font-size:.85rem;direction:ltr;opacity:.9}
+.poem-msg{margin-top:6px;font-size:.85rem;text-align:center;min-height:1.2em}
+</style><title>السعودية خط أحمر</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@600;700;800&family=Tajawal:wght@400;500;700&display=swap">
@@ -436,6 +447,17 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <div class="hero-rule" aria-hidden="true"></div>
       <p class="verse">﴿رَبِّ اجْعَلْ هَٰذَا الْبَلَدَ آمِنًا﴾</p>
       <p class="lede">حماية الوطن واجبٌ يمارسه كل مواطن، والطالب يبدأ بما يقدر عليه اليوم: أن يعرف، ويتحقق، ويُسهم.</p>
+      <div class="poem" id="poem" role="group" aria-label="مقطع صوتي: من هنا من ذروة المجد والعالم شهود ...">
+        <div class="poem-title">من هنا من ذروة المجد والعالم شهود ...</div>
+        <div class="poem-row">
+          <button type="button" class="poem-btn" id="poem-play" aria-label="استمع إلى المقطع">▶ استمع</button>
+          <input class="poem-seek" id="poem-seek" type="range" min="0" max="100" value="0" step="1" aria-label="موضع التشغيل" disabled>
+          <span class="poem-time" id="poem-time" aria-hidden="true">0:00</span>
+          <button type="button" class="poem-stop" id="poem-stop" aria-label="إيقاف المقطع">■ إيقاف</button>
+        </div>
+        <p class="poem-msg" id="poem-msg" role="status"></p>
+        <audio id="poem-audio" preload="auto" src="audio/poem.mp3"></audio>
+      </div>
       <span class="proto-tag">نموذج أولي للعرض والنقاش</span>
     </div>
   </header>
@@ -1330,6 +1352,50 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     showToast('أُعيدت اختيارات المشاركة السابقة.', false);
   }
   $('reset-btn').addEventListener('click', resetAll);
+  /* Poem player: created once, outside any re-rendered region; plays only after a tap (autoplay rules on iOS/Android) */
+  (function () {
+    var au = $('poem-audio'), pb = $('poem-play'), sk = $('poem-seek'), tm = $('poem-time'), st = $('poem-stop'), ms = $('poem-msg');
+    if (!au || !pb) return;
+    function fmt(t) { t = Math.max(0, Math.floor(t || 0)); var m = Math.floor(t / 60), x = t % 60; return m + ':' + (x < 10 ? '0' : '') + x; }
+    function ui() {
+      var playing = !au.paused && !au.ended;
+      pb.textContent = playing ? '❚❚ إيقاف مؤقت' : (au.currentTime > 0 && !au.ended ? '▶ متابعة' : '▶ استمع');
+      pb.setAttribute('aria-label', playing ? 'إيقاف المقطع مؤقتًا' : 'استمع إلى المقطع');
+    }
+    pb.addEventListener('click', function () {
+      ms.textContent = '';
+      if (au.paused) {
+        var p = au.play();
+        if (p && p.catch) p.catch(function () { ms.textContent = 'تعذّر تشغيل الصوت على هذا الجهاز. جرّب مرة أخرى أو تحقق من وضع الصامت.'; ui(); });
+      } else { au.pause(); }
+    });
+    st.addEventListener('click', function () { au.pause(); try { au.currentTime = 0; } catch (e) {} sk.value = 0; tm.textContent = '0:00'; ui(); });
+    au.addEventListener('play', ui); au.addEventListener('pause', ui);
+    au.addEventListener('ended', function () { sk.value = 0; tm.textContent = '0:00'; ui(); });
+    au.addEventListener('loadedmetadata', function () { sk.disabled = false; sk.max = Math.floor(au.duration) || 100; });
+    au.addEventListener('timeupdate', function () { if (!sk.matches(':active')) sk.value = Math.floor(au.currentTime); tm.textContent = fmt(au.currentTime) + (au.duration ? ' / ' + fmt(au.duration) : ''); });
+    au.addEventListener('waiting', function () { ms.textContent = 'جارٍ التحميل…'; });
+    au.addEventListener('playing', function () { ms.textContent = ''; });
+    au.addEventListener('error', function () { ms.textContent = 'تعذّر تحميل ملف الصوت.'; });
+    sk.addEventListener('input', function () { try { au.currentTime = +sk.value; } catch (e) {} });
+    /* Entry/refresh: always from the start. Try at once; if the browser blocks sound, start on the first tap/key. */
+    var started = false, armed = false;
+    function begin() {
+      if (started) return;
+      try { au.currentTime = 0; } catch (e) {}
+      var p = au.play();
+      if (p && p.then) p.then(function () { started = true; ms.textContent = ''; disarm(); }, function () { arm(); });
+      else started = true;
+    }
+    function onGesture(e) { if (e.target && (e.target.id === 'poem-stop')) { disarm(); started = true; return; } begin(); }
+    var EVS = ['pointerdown', 'touchend', 'click', 'keydown'];
+    function arm() { if (armed) return; armed = true; ms.textContent = 'المتصفح منع التشغيل التلقائي. المس الشاشة لبدء المقطع.'; EVS.forEach(function (n) { document.addEventListener(n, onGesture, true); }); }
+    function disarm() { armed = false; EVS.forEach(function (n) { document.removeEventListener(n, onGesture, true); }); }
+    window.addEventListener('pageshow', function (e) { if (e.persisted) { started = false; begin(); } });
+    begin();
+    try { if ('mediaSession' in navigator) navigator.mediaSession.metadata = new MediaMetadata({ title: 'من هنا من ذروة المجد والعالم شهود ...', artist: 'مدارس دار الفرسان الأهلية' }); } catch (e) {}
+  })();
+
   $('toast-undo').addEventListener('click', undoReset);
 
   /* Progress */
