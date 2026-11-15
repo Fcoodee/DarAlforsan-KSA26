@@ -405,6 +405,15 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   .flag { animation: none; opacity: 1; right: 0; }
   .verb b { animation: none; }
 }
+.occasion { margin-top: 12px; font-size: .95rem; font-weight: 600; color: rgba(242,247,243,.88); color: color-mix(in srgb, var(--hero-fg) 88%, transparent); }
+.aamn { padding-block: 26px; background: var(--band-bg); border-block: 1px solid var(--line); }
+.aamn .intro { margin-top: 8px; }
+.gal-credit { text-align: center; }
+.gal-title span { display: inline-block; }
+.family { margin-top: 34px; }
+.fam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+.fam-grid figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
+.fam-grid img { display: block; width: 100%; height: auto; border-radius: 4px; }
 </style>
 
 </head><body><div dir="rtl" lang="ar">
@@ -447,6 +456,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <div class="hero-rule" aria-hidden="true"></div>
       <p class="verse">﴿رَبِّ اجْعَلْ هَٰذَا الْبَلَدَ آمِنًا﴾</p>
       <p class="lede">حماية الوطن واجبٌ يمارسه كل مواطن، والطالب يبدأ بما يقدر عليه اليوم: أن يعرف، ويتحقق، ويُسهم.</p>
+      <p class="occasion">تفاعلًا مع الشهر العالمي للتوعية بالأمن السيبراني (أكتوبر) وحملة «آمن» ٢٠٢٦</p>
       <div class="poem" id="poem" role="group" aria-label="مقطع صوتي: من هنا من ذروة المجد والعالم شهود ...">
         <div class="poem-title">من هنا من ذروة المجد والعالم شهود ...</div>
         <div class="poem-row">
@@ -458,7 +468,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
         <p class="poem-msg" id="poem-msg" role="status"></p>
         <audio id="poem-audio" preload="auto" src="audio/poem.mp3"></audio>
       </div>
-      <span class="proto-tag">نموذج أولي للعرض والنقاش</span>
     </div>
   </header>
 
@@ -478,6 +487,25 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
         <div class="no"><span class="x" aria-hidden="true">✕</span><b>لا تكتب ما يضرّ الوطن</b><small>وأخبر معلمك بما يقلقك</small></div>
       </div>
       <p class="shield-note">لا تستهِن بأي شيء تنشره، فقد يضرّ الوطن وأنت لا تدري.</p>
+    </div>
+  </section>
+
+  <section class="aamn" id="aamn" aria-labelledby="aamn-h">
+    <div class="wrap">
+      <h2 id="aamn-h">ما هو برنامج «آمن»؟</h2>
+      <p class="intro">«آمن» برنامج للتوعية بالأمن السيبراني تنفّذه الهيئة الوطنية للأمن السيبراني، وهو امتداد للمبادرات الاستراتيجية التي تنفّذها الهيئة. هذه المبادرة تتبع مدارس دار الفرسان ولا تمثّل الهيئة.</p>
+      <p class="intro">يقدّم البرنامج مسارين للطلاب. الاستفادة منهما تخضع لشروط الهيئة وتنسيق المدرسة، فاسأل معلمك قبل أي تسجيل.</p>
+      <div class="svcs">
+        <article class="svc">
+          <h3>جلسات التوعية</h3>
+          <p>مسار توعوي للطلاب ضمن برنامج «آمن».</p>
+        </article>
+        <article class="svc">
+          <h3>سفراء «آمن»</h3>
+          <p>مسار لسفراء «آمن» من الطلاب ضمن البرنامج.</p>
+        </article>
+      </div>
+      <p class="fineprint">المرجع الرسمي: <a href="https://nca.gov.sa/en/cyber-awareness/aamn/" target="_blank" rel="noopener">صفحة برنامج «آمن» في موقع الهيئة</a>.</p>
     </div>
   </section>
 
@@ -522,8 +550,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     </section>
 
     <section id="gallery" aria-label="معرض الصور">
-      <h2 class="gal-title">#وطن_آمن</h2>
-      <div class="carousel" id="carousel" role="region" aria-roledescription="carousel" aria-label="#وطن_آمن" tabindex="0">
+      <h2 class="gal-title"><span>#وطن_آمن</span> <span>#لا_تفتح_مجال</span></h2>
+      <div class="carousel" id="carousel" role="region" aria-roledescription="carousel" aria-label="#وطن_آمن #لا_تفتح_مجال" tabindex="0">
         <div class="slide is-active"><img class="bg" src="img/s6.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s6.jpg" alt="تصميم أخضر بارز لخريطة المملكة وعبارة «ربّ اجعل هذا البلد آمنًا»"></div>
         <div class="slide"><img class="bg" src="img/s2.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s2.jpg" alt="دعاء بحفظ البلاد مكتوب بخط عربي أخضر تحت شعار النخلة والسيفين"></div>
         <div class="slide"><img class="bg" src="img/s4.jpg" alt="" aria-hidden="true"><img class="fg" src="img/s4.jpg" alt="تصميم لكلمة «السعودية» يقطعها خط أحمر"></div>
@@ -538,8 +566,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
         <div class="slide"><img class="bg" src="img/n7.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n7.jpg" alt="ملصق «آمن»: بإمكانك الآن التأكد من موثوقية الرابط أو الملف أو الرمز عبر خدمة «تحقق»" loading="lazy"></div>
         <div class="slide"><img class="bg" src="img/n8.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n8.jpg" alt="ملصق «آمن»: فحص الملفات ممارسة استباقية تعزز أمنك السيبراني" loading="lazy"></div>
         <div class="slide"><img class="bg" src="img/n9.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n9.jpg" alt="ملصق «آمن»: فحص الملفات خطوة استباقية تعزز الأمان" loading="lazy"></div>
-        <div class="slide"><img class="bg" src="img/n10.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n10.jpg" alt="ملصق «آمن»: الرقابة الأبوية حماية للأطفال" loading="lazy"></div>
-        <div class="slide"><img class="bg" src="img/n11.jpg" alt="" aria-hidden="true"><img class="fg" src="img/n11.jpg" alt="ملصق «آمن»: أجهزة ذكية في المنزل تتطلب حماية مستمرة" loading="lazy"></div>
         <button class="c-btn c-prev" id="c-prev" type="button" aria-label="الصورة السابقة">›</button>
         <button class="c-btn c-next" id="c-next" type="button" aria-label="الصورة التالية">‹</button>
         <div class="c-bar">
@@ -548,6 +574,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
           <button class="c-pause" id="c-pause" type="button">إيقاف</button>
         </div>
       </div>
+      <p class="fineprint gal-credit">ملصقات «آمن» مصدرها الهيئة الوطنية للأمن السيبراني (برنامج «آمن»).</p>
       <p class="motion-note" id="motion-note" hidden>الحركة متوقفة لأن جهازك مضبوط على تقليل الحركة (إزالة الرسوم المتحركة أو توفير الطاقة). يمكنك تشغيل المعرض بزر «تشغيل»، أو التصفح بالأسهم.</p>
     </section>
 
@@ -562,7 +589,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     <section id="m3">
       <p class="mission-label">المهمة ٣ من ٥</p>
       <h2>أتحقق قبل أن أفتح</h2>
-      <div class="callout">قبل التعامل مع الروابط ورموز الاستجابة السريعة (QR) والملفات، تأكد من موثوقيتها عبر خدمة «تحقق»، و<a href="https://x.com/hashtag/%D9%84%D8%A7_%D8%AA%D9%81%D8%AA%D8%AD_%D9%85%D8%AC%D8%A7%D9%84?src=hashtag_click" target="_blank" rel="noopener">#لا_تفتح_مجال</a> للمتصيدين.</div>
+      <div class="callout">قبل التعامل مع الروابط ورموز الاستجابة السريعة (QR) والملفات، تأكد من موثوقيتها عبر خدمة «تحقق»، و<a href="https://x.com/hashtag/%D9%84%D8%A7_%D8%AA%D9%81%D8%AA%D8%AD_%D9%85%D8%AC%D8%A7%D9%84?src=hashtag_click" target="_blank" rel="noopener">#لا_تفتح_مجال</a> في وجه التصيّد الإلكتروني.</div>
 
       <div class="svc-head">
         <span class="chip"><img src="img/nca.png" alt="شعار الهيئة الوطنية للأمن السيبراني"></span>
@@ -592,7 +619,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       </div>
       <p class="fineprint">آخر تحقق من هذه الصفحات: ٢٦ أكتوبر ٢٠٢٦. الخدمات التجريبية قد تتغير، فارجع إلى الصفحة الرسمية. لا ترسل رابطاً يحمل بياناتك إلى أي خدمة.</p>
 
-      <h3 class="sub">تدريب: ما الذي يثير الشك؟</h3>
+      <h3 class="sub">تدريب: ما التصرف الأنسب؟</h3>
       <p class="intro">محاكاة تعليمية داخل الصفحة. لا ترسل شيئاً ولا تستخدم الخدمة الفعلية، والأمثلة مصطنعة.</p>
       <div id="sim"></div>
       <div id="sim-result"></div>
@@ -639,8 +666,18 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <ul class="sum-list" id="sum-list"></ul>
       <p class="sum-pledge" id="sum-pledge"></p>
       <p class="sum-dua">اللهم احفظ بلادنا من كل شر، وأدم علينا نعمة الأمن والأمان.</p>
-      <p class="sum-close"><span>#وطن_آمن</span><span>#كلنا_درع_الوطن</span></p>
+      <p class="sum-close"><span>#وطن_آمن</span><span>#لا_تفتح_مجال</span><span>#كلنا_درع_الوطن</span></p>
       <p class="sum-hint">لبدء مشاركة جديدة اضغط «مشاركة جديدة» في أعلى الصفحة.</p>
+    </section>
+
+    <section id="family" class="family" aria-labelledby="fam-h">
+      <h2 id="fam-h">ركن لأسرتي</h2>
+      <p class="intro">ملصقان موجّهان لوليّ الأمر. أطلِع أسرتك عليهما.</p>
+      <div class="fam-grid">
+        <figure><img src="img/n10.jpg" alt="ملصق «آمن»: الرقابة الأبوية حماية للأطفال" loading="lazy"></figure>
+        <figure><img src="img/n11.jpg" alt="ملصق «آمن»: أجهزة ذكية في المنزل تتطلب حماية مستمرة" loading="lazy"></figure>
+      </div>
+      <p class="fineprint">المصدر: الهيئة الوطنية للأمن السيبراني (برنامج «آمن»).</p>
     </section>
   </main>
   <footer class="foot">
@@ -926,6 +963,45 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       correct: 1,
       good: 'كلمة المرور على الملف تمنع برامج الحماية من فحصه. لا تفتح ملفًا من مجهول، وأعطه لشخص بالغ ليفحصه عبر «تحقق للملفات».',
       bad: 'الأنسب هو عدم فتحه وإعطاؤه لشخص بالغ. تغيير الجهاز لا يزيل الخطر، وقد ينتقل إلى جهاز آخر.'
+    },
+    {
+      kind: 'تحديث الجهاز',
+      msg: 'ظهرت رسالة على جهاز العائلة: «يتوفر تحديث للنظام». قال أخوك: «أغلقها، التحديث يبطئ الجهاز».',
+      code: '',
+      opts: [
+        'أتجاهل الرسالة دائمًا',
+        'أطلب من شخص بالغ تثبيت التحديث من الإعدادات الرسمية للجهاز',
+        'أحمّل التحديث من أي رابط يصلني'
+      ],
+      correct: 1,
+      good: 'التحديثات تسدّ ثغرات يستغلها المخترقون. ثبّتها من إعدادات الجهاز الرسمية وبمساعدة شخص بالغ.',
+      bad: 'الأنسب هو تثبيت التحديث من إعدادات الجهاز الرسمية مع شخص بالغ. تجاهله يترك الثغرات مفتوحة، والتحميل من رابط مجهول قد يجلب برنامجًا ضارًا.'
+    },
+    {
+      kind: 'كلمة المرور',
+      msg: 'تريد إنشاء حساب في لعبة تعليمية، وتفكر في كلمة مرور لحسابك.',
+      code: '',
+      opts: [
+        'اسمي أو تاريخ ميلادي، فهي سهلة التذكر',
+        'كلمة طويلة ومختلفة عن كلمات حساباتي الأخرى، ولا أخبر بها أحدًا إلا وليّ أمري',
+        'الكلمة نفسها في كل حساباتي حتى لا أنساها'
+      ],
+      correct: 1,
+      good: 'كلمة مرور قوية: طويلة وغير متوقعة ومختلفة لكل حساب. وإن كُشفت واحدة لم تنكشف بقية حساباتك.',
+      bad: 'الأنسب هو كلمة طويلة ومختلفة لكل حساب. الاسم وتاريخ الميلاد سهلا التخمين، وتكرار الكلمة يجعل اختراق حساب واحد يفتح بقية الحسابات.'
+    },
+    {
+      kind: 'نسخة احتياطية',
+      msg: 'صورك وواجباتك على جهازك اللوحي، وفجأة تعطّل الجهاز ولم يعد يعمل.',
+      code: '',
+      opts: [
+        'لا أعمل شيئًا، فالجهاز لن يتعطل',
+        'كنت أحتاج نسخة احتياطية من ملفاتي المهمة محفوظة في مكان آخر، وأطلب من شخص بالغ تنظيمها',
+        'أحفظ كل شيء في المكان نفسه'
+      ],
+      correct: 1,
+      good: 'النسخة الاحتياطية تحفظ ملفاتك إن ضاع الجهاز أو تعطّل أو أصابه برنامج ضار. احفظها في مكان آخر غير الجهاز.',
+      bad: 'الأنسب هو حفظ نسخة من الملفات المهمة في مكان آخر. الأجهزة قد تتعطل أو تُفقد، ومن يحفظ كل شيء في مكان واحد يخسره معًا.'
     }
   ];
 
